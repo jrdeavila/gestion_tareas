@@ -12,6 +12,5 @@ abstract class AppDefaults {
 
   static const firebaseAuthInstances = [
     '[SECONDARY]',
-    // 'tertiary',
   ];
 }

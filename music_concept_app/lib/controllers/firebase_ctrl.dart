@@ -32,13 +32,12 @@ class FirebaseCtrl extends GetxController {
   }
 
   FirebaseApp nextApp() {
-    final app = _apps.firstWhere(
-      (element) =>
-          element.name !=
-          (_getStorage.read<String?>("firebase-app") ?? "[DEFAULT]"),
-      orElse: () => _apps.first,
-    );
-    return app;
+    final indexApp = _apps.indexOf(defaultApp);
+
+    final nextApp =
+        indexApp + 1 == _apps.length ? _apps.first : _apps[indexApp + 1];
+
+    return nextApp;
   }
 
   void _deleteControllers() {

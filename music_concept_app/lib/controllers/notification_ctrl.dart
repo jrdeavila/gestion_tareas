@@ -25,7 +25,7 @@ class NotificationCtrl extends GetxController {
 
     _notifications.bindStream(
       NotificationService.notifications(
-        accountRef: "users/${_authApp.currentUser!.uid}",
+        accountRef: "users/${_authApp.currentUser?.uid}",
       ).map((event) => event.docs),
     );
     ever(_notifications, _onNotificationChange);
