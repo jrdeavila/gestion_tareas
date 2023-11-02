@@ -22,7 +22,7 @@ class AuthenticationCtrl extends GetxController {
         Get.put(NotificationCtrl(app));
         Get.put(BusinessNearlyCtrl(app));
         Get.put(UserCtrl());
-        Get.lazyPut(() => HomeCtrl());
+        Get.lazyPut(() => HomeCtrl(app));
         Get.offAllNamed(AppRoutes.home);
       } else {
         Get.delete<NotificationCtrl>();
@@ -37,6 +37,17 @@ class AuthenticationCtrl extends GetxController {
     });
     _firebaseUser
         .bindStream(FirebaseAuth.instanceFor(app: _app).authStateChanges());
+  }
+
+  void _validateOtherApps() {
+    final hasActiveAccounts = {
+      for (var e in Get.find<FirebaseCtrl>().apps)
+        e.name: FirebaseAuth.instanceFor(app: e).currentUser,
+    }.values.any((element) => element != null);
+
+    if (hasActiveAccounts) {
+      Get.find<FirebaseCtrl>().changeApp();
+    }
   }
 
   void login({
@@ -92,8 +103,8 @@ class AuthenticationCtrl extends GetxController {
       accountRef: "users/${_firebaseUser.value!.uid}",
       businessRef: null,
     );
-    FirebaseAuth.instanceFor(app: _app).signOut();
+    FirebaseAuth.instanceFor(app: _app)
+        .signOut()
+        .then((value) => _validateOtherApps());
   }
-
-  void addNewAccount() {}
 }

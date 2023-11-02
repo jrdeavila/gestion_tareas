@@ -6,6 +6,10 @@ import 'package:get/get.dart';
 import 'package:music_concept_app/lib.dart';
 
 class HomeCtrl extends GetxController {
+  final FirebaseApp app;
+
+  HomeCtrl(this.app);
+
   final PageController pageCtrl = PageController(initialPage: 1);
 
   final RxInt _currentPage = RxInt(1);
@@ -17,7 +21,6 @@ class HomeCtrl extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    final app = Get.find<FirebaseCtrl>().defaultApp;
     Get.put(PostCtrl(app));
     Get.put(EventCtrl(app));
     Get.put(FanPageCtrl(app));

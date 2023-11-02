@@ -39,10 +39,9 @@ class UserCtrl extends GetxController {
 
   void addAccount() {
     Get.find<FirebaseCtrl>().changeApp();
-    Get.toNamed(AppRoutes.login);
   }
 
   void changeAccount(String name) {
-    Get.find<FirebaseCtrl>().changeDefaultApp(name);
+    Get.find<FirebaseCtrl>().changeApp();
   }
 }

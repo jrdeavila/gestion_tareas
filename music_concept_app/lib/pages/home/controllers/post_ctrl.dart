@@ -78,7 +78,7 @@ class PostCtrl extends GetxController {
   }
 
   Stream<List<FdSnapshot>> get _fetchingPost =>
-      PostService.getAccountFollowingPost("users/${_authApp.currentUser!.uid}")
+      PostService.getAccountFollowingPost("users/${_authApp.currentUser?.uid}")
           .asyncMap((event) async {
         _isLoading.value = true;
         await Future.delayed(1.seconds);

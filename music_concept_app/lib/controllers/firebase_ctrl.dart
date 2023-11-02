@@ -1,42 +1,29 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:music_concept_app/lib.dart';
 
 class FirebaseCtrl extends GetxController {
   final List<FirebaseApp> _apps;
-  final GetStorage _getStorage = GetStorage();
 
   FirebaseCtrl(this._apps);
-  FirebaseApp get defaultApp => _apps.firstWhere(
-        (element) => element.name == _getStorage.read("firebase-app"),
-        orElse: () => _apps.first,
-      );
+
+  late final Rx<FirebaseApp> _defaultApp = Rx<FirebaseApp>(_apps.first);
+
+  FirebaseApp get defaultApp => _defaultApp.value;
 
   List<FirebaseApp> get apps => _apps;
 
   @override
   void onReady() {
     super.onReady();
-    Get.put(AuthenticationCtrl(defaultApp));
-    Get.put(ConnectionCtrl());
-    Get.put(LocationCtrl());
-    Get.put(ActivityCtrl(defaultApp));
-
-    WidgetsBinding.instance.addObserver(LifeCycleObserver(defaultApp));
-  }
-
-  void _changeDefaultName(String value) {
-    _getStorage.write("firebase-app", value);
+    _mountControllers(defaultApp);
   }
 
   FirebaseApp nextApp() {
-    final indexApp = _apps.indexOf(defaultApp);
-
-    final nextApp =
-        indexApp + 1 == _apps.length ? _apps.first : _apps[indexApp + 1];
-
+    final index = _apps.indexOf(defaultApp);
+    final nextIndex = index + 1;
+    final nextApp = _apps[nextIndex == _apps.length ? 0 : nextIndex];
     return nextApp;
   }
 
@@ -54,7 +41,7 @@ class FirebaseCtrl extends GetxController {
   }
 
   void _mountControllers(FirebaseApp app) {
-    Get.put(AuthenticationCtrl(nextApp()));
+    Get.put(AuthenticationCtrl(app));
     Get.put(ConnectionCtrl());
     Get.put(LocationCtrl());
     Get.put(ActivityCtrl(app));
@@ -65,15 +52,9 @@ class FirebaseCtrl extends GetxController {
     _deleteControllers();
 
     final app = nextApp();
-    _changeDefaultName(app.name);
+    _defaultApp.value = app;
+    // _changeDefaultName(app.name);
 
-    _mountControllers(app);
-  }
-
-  void changeDefaultApp(String name) {
-    _deleteControllers();
-    _changeDefaultName(name);
-    final app = defaultApp;
     _mountControllers(app);
   }
 }
