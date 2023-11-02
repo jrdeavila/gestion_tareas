@@ -16,6 +16,7 @@ class AuthenticationCtrl extends GetxController {
       if (p0 != null) {
         Get.put(NotificationCtrl());
         Get.put(BusinessNearlyCtrl());
+        Get.put(UserCtrl());
         Get.lazyPut(() => HomeCtrl());
         Get.offAllNamed(AppRoutes.home);
       } else {
@@ -86,4 +87,6 @@ class AuthenticationCtrl extends GetxController {
     );
     FirebaseAuth.instance.signOut();
   }
+
+  void addNewAccount() {}
 }

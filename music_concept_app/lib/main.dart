@@ -18,19 +18,27 @@ void main() async {
       WidgetsBinding.instance.addObserver(LifeCycleObserver());
 
       await GetStorage.init();
-      await Firebase.initializeApp(
-        options: DefaultFirebaseOptions.currentPlatform,
-      );
-      await FirebaseAppCheck.instance.activate(
-        androidProvider: AndroidProvider.debug,
-      );
+
       initializeDateFormatting('es');
       timeago.setLocaleMessages('es', timeago.EsMessages());
 
-      Get.put(AuthenticationCtrl());
-      Get.put(ConnectionCtrl());
-      Get.put(LocationCtrl());
-      Get.put(ActivityCtrl());
+      Get.putAsync(() async {
+        final apps = await Future.wait([
+          Firebase.initializeApp(
+            options: DefaultFirebaseOptions.currentPlatform,
+          ),
+          ...AppDefaults.firebaseAuthInstances.map(
+            (e) => Firebase.initializeApp(
+              name: e,
+              options: DefaultFirebaseOptions.currentPlatform,
+            ),
+          ),
+        ]);
+        await FirebaseAppCheck.instance.activate(
+          androidProvider: AndroidProvider.debug,
+        );
+        return FirebaseCtrl(apps);
+      });
 
       Get.lazyPut(() => LoginCtrl());
       Get.lazyPut(() => RegisterCtrl());
