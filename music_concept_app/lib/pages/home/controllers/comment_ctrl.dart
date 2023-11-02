@@ -1,9 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:get/get.dart';
 import 'package:music_concept_app/lib.dart';
 
 class CommentCtrl extends GetxController {
+  final FirebaseApp _app;
+
+  CommentCtrl(this._app);
+
+  FirebaseAuth get _authApp => FirebaseAuth.instanceFor(app: _app);
+
   final RxString _content = ''.obs;
   final RxBool _isUploading = false.obs;
   final RxList<DocumentSnapshot<Map<String, dynamic>>> comments = RxList();
@@ -43,7 +50,7 @@ class CommentCtrl extends GetxController {
     required String commentRef,
   }) {
     return LikesCommentsService.isLiked(
-      accountRef: "users/${FirebaseAuth.instance.currentUser!.uid}",
+      accountRef: "users/${_authApp.currentUser!.uid}",
       likeableRef: commentRef,
     );
   }
@@ -52,7 +59,7 @@ class CommentCtrl extends GetxController {
     required String commentRef,
   }) {
     LikesCommentsService.likeLikeable(
-      accountRef: FirebaseAuth.instance.currentUser!.uid,
+      accountRef: _authApp.currentUser!.uid,
       likeableRef: commentRef,
     );
   }
@@ -61,7 +68,7 @@ class CommentCtrl extends GetxController {
     required String commentRef,
   }) {
     LikesCommentsService.dislikeLikeable(
-      accountRef: FirebaseAuth.instance.currentUser!.uid,
+      accountRef: _authApp.currentUser!.uid,
       likeableRef: commentRef,
     );
   }
@@ -86,7 +93,7 @@ class CommentCtrl extends GetxController {
     if (_content.value.isNotEmpty) {
       _isUploading.value = true;
       LikesCommentsService.commentCommentable(
-        accountRef: FirebaseAuth.instance.currentUser!.uid,
+        accountRef: _authApp.currentUser!.uid,
         commentableRef: _selectedPostRef.value!,
         content: _content.value,
       ).then((value) {

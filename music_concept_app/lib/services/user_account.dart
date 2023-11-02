@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:music_concept_app/lib.dart';
@@ -34,9 +35,11 @@ abstract class UserAccountService {
     String? address,
     String? category,
     UserAccountType type = UserAccountType.user,
+    required FirebaseApp firebaseApp,
   }) async {
     return FirebaseFirestore.instance.runTransaction((transaction) async {
-      final user = (await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      final user = (await FirebaseAuth.instanceFor(app: firebaseApp)
+              .createUserWithEmailAndPassword(
         email: email,
         password: password,
       ))

@@ -25,7 +25,9 @@ class _PostItemState extends State<PostItem> {
   @override
   void initState() {
     super.initState();
-    Get.lazyPut(() => FollowerEditSurveyItemsCtrl());
+    Get.lazyPut(() => FollowerEditSurveyItemsCtrl(
+          Get.find<FirebaseCtrl>().defaultApp,
+        ));
   }
 
   @override

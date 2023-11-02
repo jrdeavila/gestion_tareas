@@ -1,11 +1,18 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 import 'package:get/get.dart';
 import 'package:music_concept_app/lib.dart';
 
 class NotificationCtrl extends GetxController {
+  final FirebaseApp _app;
+
+  NotificationCtrl(this._app);
+
+  FirebaseAuth get _authApp => FirebaseAuth.instanceFor(app: _app);
+
   final RxInt _notificationCount = RxInt(0);
   final RxList<FdSnapshot> _notifications = RxList<FdSnapshot>([]);
   int get notificationCount => _notificationCount.value;
@@ -18,7 +25,7 @@ class NotificationCtrl extends GetxController {
 
     _notifications.bindStream(
       NotificationService.notifications(
-        accountRef: "users/${FirebaseAuth.instance.currentUser!.uid}",
+        accountRef: "users/${_authApp.currentUser?.uid}",
       ).map((event) => event.docs),
     );
     ever(_notifications, _onNotificationChange);
@@ -50,7 +57,7 @@ class NotificationCtrl extends GetxController {
 
   void markAllAsRead() {
     NotificationService.markAllAsRead(
-      accountRef: "users/${FirebaseAuth.instance.currentUser!.uid}",
+      accountRef: "users/${_authApp.currentUser!.uid}",
     );
   }
 
@@ -62,7 +69,7 @@ class NotificationCtrl extends GetxController {
 
   void deleteAll() {
     NotificationService.deleteAllNotification(
-      accountRef: "users/${FirebaseAuth.instance.currentUser!.uid}",
+      accountRef: "users/${_authApp.currentUser!.uid}",
     );
   }
 }

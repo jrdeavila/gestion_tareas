@@ -24,7 +24,9 @@ class _EventDialogContentState extends State<EventDialogContent> {
   @override
   void initState() {
     super.initState();
-    Get.lazyPut(() => CreateEventCtrl());
+    Get.lazyPut(() => CreateEventCtrl(
+          Get.find<FirebaseCtrl>().defaultApp,
+        ));
   }
 
   @override

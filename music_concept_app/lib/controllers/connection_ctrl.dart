@@ -28,7 +28,7 @@ class ConnectionCtrl extends GetxController {
           Get.offAndToNamed("/not-wifi");
         }
       } else {
-        Get.put(AuthenticationCtrl());
+        Get.put(AuthenticationCtrl(Get.find<FirebaseCtrl>().defaultApp));
         Get.find<HomeCtrl>().goToReed();
         if (Get.currentRoute == "/not-wifi") {
           Get.offAllNamed(_lastRoute.value);

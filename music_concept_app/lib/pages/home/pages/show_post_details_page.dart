@@ -17,7 +17,9 @@ class _ShowPostDetailsPageState extends State<ShowPostDetailsPage> {
   @override
   void initState() {
     super.initState();
-    final ctrl = Get.put(CommentCtrl());
+    final ctrl = Get.put(CommentCtrl(
+      Get.find<FirebaseCtrl>().defaultApp,
+    ));
     ctrl.setSelectedPost(widget.postRef);
   }
 

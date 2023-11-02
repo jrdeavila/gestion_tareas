@@ -12,9 +12,36 @@ class UserCtrl extends GetxController {
   @override
   void onReady() {
     super.onReady();
-    FirebaseAuth.instance.userChanges().listen((user) {
+    FirebaseAuth.instanceFor(app: Get.find<FirebaseCtrl>().defaultApp)
+        .userChanges()
+        .listen((user) {
       _user.value =
           user != null ? UserAccountService.getUserAccountRef(user.uid) : null;
     });
+  }
+
+  List<FirebaseAuth> authInstances() {
+    return Get.find<FirebaseCtrl>().apps.map((e) {
+      return FirebaseAuth.instanceFor(app: e);
+    }).toList();
+  }
+
+  Map<String?, DocumentReference<Map<String, dynamic>>> get userAccounts {
+    final data = {
+      for (var e in authInstances())
+        e.app.name: e.currentUser != null
+            ? UserAccountService.getUserAccountRef(e.currentUser?.uid)
+            : null
+    }..removeWhere((key, value) => value == null);
+
+    return data.cast();
+  }
+
+  void addAccount() {
+    Get.find<FirebaseCtrl>().changeApp();
+  }
+
+  void changeAccount(String name) {
+    Get.find<FirebaseCtrl>().changeApp();
   }
 }

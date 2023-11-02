@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
@@ -7,6 +8,12 @@ import 'package:get/get.dart';
 import 'package:music_concept_app/lib.dart';
 
 class CreatePostCtrl extends GetxController {
+  final FirebaseApp _app;
+
+  CreatePostCtrl(this._app);
+
+  FirebaseAuth get _authApp => FirebaseAuth.instanceFor(app: _app);
+
   final RxString _content = ''.obs;
   final Rx<Uint8List?> _image = Rx<Uint8List?>(null);
   final Rx<PostVisibility> _visibility = PostVisibility.public.obs;
@@ -37,7 +44,7 @@ class CreatePostCtrl extends GetxController {
   }
 
   void submit() async {
-    final accountRef = "users/${FirebaseAuth.instance.currentUser!.uid}";
+    final accountRef = "users/${_authApp.currentUser!.uid}";
     _isUploading.value = true;
 
     await PostService.createPost(
@@ -52,6 +59,12 @@ class CreatePostCtrl extends GetxController {
 }
 
 class PostCtrl extends GetxController {
+  final FirebaseApp _app;
+
+  PostCtrl(this._app);
+
+  FirebaseAuth get _authApp => FirebaseAuth.instanceFor(app: _app);
+
   final RxList<FdSnapshot> _posts = <FdSnapshot>[].obs;
   final RxBool _isLoading = true.obs;
 
@@ -65,8 +78,7 @@ class PostCtrl extends GetxController {
   }
 
   Stream<List<FdSnapshot>> get _fetchingPost =>
-      PostService.getAccountFollowingPost(
-              "users/${FirebaseAuth.instance.currentUser!.uid}")
+      PostService.getAccountFollowingPost("users/${_authApp.currentUser?.uid}")
           .asyncMap((event) async {
         _isLoading.value = true;
         await Future.delayed(1.seconds);
@@ -98,7 +110,7 @@ class PostCtrl extends GetxController {
     return SurveyService.hasOptionAnswer(
       surveyRef: surveyRef,
       optionRef: optionRef,
-      accountRef: "users/${FirebaseAuth.instance.currentUser?.uid}",
+      accountRef: "users/${_authApp.currentUser?.uid}",
     );
   }
 
@@ -106,7 +118,7 @@ class PostCtrl extends GetxController {
     required String postRef,
   }) {
     return LikesCommentsService.isLiked(
-      accountRef: "users/${FirebaseAuth.instance.currentUser!.uid}",
+      accountRef: "users/${_authApp.currentUser!.uid}",
       likeableRef: postRef,
     );
   }
@@ -132,7 +144,7 @@ class PostCtrl extends GetxController {
   Stream<List<QueryDocumentSnapshot<Map<String, dynamic>>>> profilePosts(
       {String? guestRef}) {
     return PostService.getAccountPosts(
-        guestRef ?? "users/${FirebaseAuth.instance.currentUser!.uid}");
+        guestRef ?? "users/${_authApp.currentUser!.uid}");
   }
 
   void deletePost(String postRef) {
@@ -146,7 +158,7 @@ class PostCtrl extends GetxController {
     SurveyService.createOptionAnswer(
       surveyRef: surveyRef,
       optionRef: optionRef,
-      accountRef: "users/${FirebaseAuth.instance.currentUser?.uid}",
+      accountRef: "users/${_authApp.currentUser?.uid}",
     );
   }
 
@@ -157,7 +169,7 @@ class PostCtrl extends GetxController {
     SurveyService.deleteOptionAnswer(
       surveyRef: surveyRef,
       optionRef: optionRef,
-      accountRef: "users/${FirebaseAuth.instance.currentUser?.uid}",
+      accountRef: "users/${_authApp.currentUser?.uid}",
     );
   }
 
@@ -168,20 +180,20 @@ class PostCtrl extends GetxController {
     SurveyService.changeOptionAnswer(
       surveyRef: surveyRef,
       optionRef: optionRef,
-      accountRef: "users/${FirebaseAuth.instance.currentUser?.uid}",
+      accountRef: "users/${_authApp.currentUser?.uid}",
     );
   }
 
   void likePost({required String postRef}) {
     LikesCommentsService.likeLikeable(
-      accountRef: FirebaseAuth.instance.currentUser!.uid,
+      accountRef: _authApp.currentUser!.uid,
       likeableRef: postRef,
     );
   }
 
   void dislikePost({required String postRef}) {
     LikesCommentsService.dislikeLikeable(
-      accountRef: FirebaseAuth.instance.currentUser!.uid,
+      accountRef: _authApp.currentUser!.uid,
       likeableRef: postRef,
     );
   }

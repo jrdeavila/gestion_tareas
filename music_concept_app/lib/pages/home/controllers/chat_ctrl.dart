@@ -1,12 +1,19 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:get/get.dart';
 import 'package:music_concept_app/lib.dart';
 
 class ChatCtrl extends GetxController {
+  final FirebaseApp _app;
+
+  ChatCtrl(this._app);
+
+  FirebaseAuth get _authApp => FirebaseAuth.instanceFor(app: _app);
+
   int get chatsNotRead => chats.where((element) {
         return element.data()?['lastSenderRef'] !=
-                "users/${FirebaseAuth.instance.currentUser!.uid}" &&
+                "users/${_authApp.currentUser!.uid}" &&
             !element.data()?['receiverSeen'];
       }).length;
 
@@ -19,7 +26,7 @@ class ChatCtrl extends GetxController {
 
   Stream<FdSnapshot> getReceiverStream(List<String> refs) {
     var findReceiverRef = refs.firstWhere(
-      (element) => element != "users/${FirebaseAuth.instance.currentUser!.uid}",
+      (element) => element != "users/${_authApp.currentUser!.uid}",
     );
     return UserAccountService.getUserAccountDoc(findReceiverRef).snapshots();
   }
@@ -39,17 +46,16 @@ class ChatCtrl extends GetxController {
     super.onReady();
     friends.bindStream(
       FollowingFollowersServices.getFriends(
-          accountRef: "users/${FirebaseAuth.instance.currentUser!.uid}"),
+          accountRef: "users/${_authApp.currentUser!.uid}"),
     );
     chats.bindStream(
-      ChatService.getChatList(
-          "users/${FirebaseAuth.instance.currentUser!.uid}"),
+      ChatService.getChatList("users/${_authApp.currentUser!.uid}"),
     );
 
     ever(chats, (value) {
       var hasMessages = value.where((element) {
         return element.data()?['lastSenderRef'] !=
-                "users/${FirebaseAuth.instance.currentUser!.uid}" &&
+                "users/${_authApp.currentUser!.uid}" &&
             !element.data()?['receiverSeen'];
       }).isNotEmpty;
       if (hasMessages) {
@@ -62,7 +68,7 @@ class ChatCtrl extends GetxController {
     required String receiverRef,
   }) async {
     var ref = await ChatService.createConversation(
-      senderRef: "users/${FirebaseAuth.instance.currentUser!.uid}",
+      senderRef: "users/${_authApp.currentUser!.uid}",
       receiverRef: receiverRef,
     );
 
@@ -70,16 +76,14 @@ class ChatCtrl extends GetxController {
   }
 
   void openChat(FdSnapshot chat) {
-    if (chat.data()?['lastSenderRef'] !=
-        "users/${FirebaseAuth.instance.currentUser!.uid}") {
+    if (chat.data()?['lastSenderRef'] != "users/${_authApp.currentUser!.uid}") {
       ChatService.receiverSeenMessage(conversationRef: chat.reference.path);
     }
     Get.toNamed(AppRoutes.chat, arguments: chat.reference.path);
   }
 
   bool isSender(FdSnapshot chat) {
-    return chat.data()?['senderRef'] ==
-        "users/${FirebaseAuth.instance.currentUser!.uid}";
+    return chat.data()?['senderRef'] == "users/${_authApp.currentUser!.uid}";
   }
 
   void sendMessage({
@@ -89,7 +93,7 @@ class ChatCtrl extends GetxController {
     if (message.isEmpty) return;
     await ChatService.sendMessage(
       conversationRef: conversationRef,
-      senderRef: "users/${FirebaseAuth.instance.currentUser!.uid}",
+      senderRef: "users/${_authApp.currentUser!.uid}",
       message: message,
     );
   }

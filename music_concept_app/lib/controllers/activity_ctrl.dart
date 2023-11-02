@@ -1,11 +1,17 @@
 import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:music_concept_app/lib.dart';
 
 class LifeCycleObserver extends WidgetsBindingObserver {
+  final FirebaseApp _app;
+
+  LifeCycleObserver(this._app);
+
+  FirebaseAuth get _authApp => FirebaseAuth.instanceFor(app: _app);
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
@@ -15,20 +21,26 @@ class LifeCycleObserver extends WidgetsBindingObserver {
     if (state == AppLifecycleState.paused ||
         state == AppLifecycleState.detached) {
       UserAccountService.saveActiveStatus(
-        FirebaseAuth.instance.currentUser!.uid,
+        _authApp.currentUser!.uid,
         active: false,
       );
       UserAccountService.saveActiveStatus(
-        FirebaseAuth.instance.currentUser!.uid,
+        _authApp.currentUser!.uid,
         active: false,
       );
       BusinessService.setCurrentVisit(
-          accountRef: "users/${FirebaseAuth.instance.currentUser!.uid}");
+          accountRef: "users/${_authApp.currentUser!.uid}");
     }
   }
 }
 
 class ActivityCtrl extends GetxController {
+  final FirebaseApp _app;
+
+  ActivityCtrl(this._app);
+
+  FirebaseAuth get _authApp => FirebaseAuth.instanceFor(app: _app);
+
   Timer? _timer;
   final _duration = 1.minutes;
   final RxBool _authenticated = RxBool(false);
@@ -36,8 +48,8 @@ class ActivityCtrl extends GetxController {
   @override
   void onReady() {
     super.onReady();
-    _authenticated.bindStream(
-        FirebaseAuth.instance.userChanges().map((event) => event != null));
+    _authenticated
+        .bindStream(_authApp.userChanges().map((event) => event != null));
     _authenticated.listen((event) {
       if (event) {
         resetTimer();
@@ -47,7 +59,7 @@ class ActivityCtrl extends GetxController {
 
   void _sendInactivityState([bool status = true]) {
     UserAccountService.saveActiveStatus(
-      FirebaseAuth.instance.currentUser!.uid,
+      _authApp.currentUser!.uid,
       active: status,
     );
   }
