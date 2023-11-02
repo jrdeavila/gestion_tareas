@@ -2,12 +2,19 @@ import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 import 'package:get/get.dart';
 import 'package:music_concept_app/lib.dart';
 
 class ProfileCtrl extends GetxController {
+  final FirebaseApp _app;
+
+  ProfileCtrl(this._app);
+
+  FirebaseAuth get _authApp => FirebaseAuth.instanceFor(app: _app);
+
   final RxList<String> wallpapers = RxList();
   final Rx<String?> _selectedWallpaper = Rx<String?>(null);
 
@@ -16,7 +23,7 @@ class ProfileCtrl extends GetxController {
   Stream<DocumentSnapshot<Map<String, dynamic>>> getAccountStream(
       [String? accountRef]) {
     return UserAccountService.getUserAccountDoc(
-      accountRef ?? "users/${FirebaseAuth.instance.currentUser?.uid}",
+      accountRef ?? "users/${_authApp.currentUser?.uid}",
     ).snapshots();
   }
 
@@ -24,50 +31,43 @@ class ProfileCtrl extends GetxController {
     required String? accountRef,
   }) =>
       BusinessService.getFollingInCurrentVisit(
-        accountRef:
-            accountRef ?? "users/${FirebaseAuth.instance.currentUser!.uid}",
+        accountRef: accountRef ?? "users/${_authApp.currentUser!.uid}",
       );
 
   Stream<List<FdSnapshot>> getBusinessVisits({
     required String? accountRef,
   }) =>
       BusinessService.getBusinessVisits(
-        accountRef:
-            accountRef ?? "users/${FirebaseAuth.instance.currentUser!.uid}",
+        accountRef: accountRef ?? "users/${_authApp.currentUser!.uid}",
       );
 
   Stream<List<FdSnapshot>> getVisitors({
     required String? accountRef,
   }) =>
       BusinessService.getVisitors(
-        businessRef:
-            accountRef ?? "users/${FirebaseAuth.instance.currentUser!.uid}",
+        businessRef: accountRef ?? "users/${_authApp.currentUser!.uid}",
       );
 
   Stream<bool> isAFriend({
     required String accountRef,
   }) {
     return FollowingFollowersServices.accountIsFriend(
-        accountRef: accountRef,
-        userRef: "users/${FirebaseAuth.instance.currentUser!.uid}");
+        accountRef: accountRef, userRef: "users/${_authApp.currentUser!.uid}");
   }
 
   Stream<List<String>> getFollowers(String? accountRef) {
     return FollowingFollowersServices.getFollowers(
-        accountRef:
-            accountRef ?? "users/${FirebaseAuth.instance.currentUser!.uid}");
+        accountRef: accountRef ?? "users/${_authApp.currentUser!.uid}");
   }
 
   Stream<List<String>> getFollowings(String? accountRef) {
     return FollowingFollowersServices.getFollowings(
-        accountRef:
-            accountRef ?? "users/${FirebaseAuth.instance.currentUser!.uid}");
+        accountRef: accountRef ?? "users/${_authApp.currentUser!.uid}");
   }
 
   Stream<List<String>> getFriends(String? accountRef) {
     return FollowingFollowersServices.getFriends(
-        accountRef:
-            accountRef ?? "users/${FirebaseAuth.instance.currentUser!.uid}");
+        accountRef: accountRef ?? "users/${_authApp.currentUser!.uid}");
   }
 
   @override
@@ -76,7 +76,7 @@ class ProfileCtrl extends GetxController {
     _loadWallpapers();
     _selectedWallpaper.listen((value) {
       BackgroundService.setBackground(
-        "users/${FirebaseAuth.instance.currentUser?.uid}",
+        "users/${_authApp.currentUser?.uid}",
         value,
       );
     });
@@ -143,14 +143,14 @@ class ProfileCtrl extends GetxController {
 
   void addAcademicStudy(String value) {
     UserAccountService.addAcademicStudy(
-      accountRef: "users/${FirebaseAuth.instance.currentUser!.uid}",
+      accountRef: "users/${_authApp.currentUser!.uid}",
       value: value,
     );
   }
 
   void removeAcademicStudy(String value) {
     UserAccountService.removeAcademicStudy(
-      accountRef: "users/${FirebaseAuth.instance.currentUser!.uid}",
+      accountRef: "users/${_authApp.currentUser!.uid}",
       value: value,
     );
   }
@@ -160,15 +160,14 @@ class ProfileCtrl extends GetxController {
     required String? accountRef,
   }) {
     UserAccountService.changeMaritalStatus(
-      accountRef:
-          accountRef ?? "users/${FirebaseAuth.instance.currentUser!.uid}",
+      accountRef: accountRef ?? "users/${_authApp.currentUser!.uid}",
       value: value,
     );
   }
 
   void changeAvatar(Uint8List image) {
     UserAccountService.changeAvatar(
-      accountRef: FirebaseAuth.instance.currentUser!.uid,
+      accountRef: _authApp.currentUser!.uid,
       image: image,
     );
   }

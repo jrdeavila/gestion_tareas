@@ -18,7 +18,7 @@ class _PostDialogContentState extends State<PostDialogContent> {
   @override
   void initState() {
     super.initState();
-    Get.lazyPut(() => CreatePostCtrl());
+    Get.lazyPut(() => CreatePostCtrl(Get.find<FirebaseCtrl>().defaultApp));
   }
 
   @override

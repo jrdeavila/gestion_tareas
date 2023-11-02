@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:music_concept_app/lib.dart';
@@ -16,12 +17,13 @@ class HomeCtrl extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    Get.put(PostCtrl());
-    Get.put(EventCtrl());
-    Get.put(FanPageCtrl());
+    final app = Get.find<FirebaseCtrl>().defaultApp;
+    Get.put(PostCtrl(app));
+    Get.put(EventCtrl(app));
+    Get.put(FanPageCtrl(app));
     Get.put(SearchCtrl());
-    Get.put(ProfileCtrl());
-    Get.put(ChatCtrl());
+    Get.put(ProfileCtrl(app));
+    Get.put(ChatCtrl(app));
   }
 
   @override
@@ -128,6 +130,12 @@ class SearchCtrl extends GetxController {
 }
 
 class FanPageCtrl extends GetxController {
+  final FirebaseApp _app;
+
+  FanPageCtrl(this._app);
+
+  FirebaseAuth get _authApp => FirebaseAuth.instanceFor(app: _app);
+
   final PageController pageCtrl = PageController();
   final RxInt _currentPage = RxInt(0);
 
@@ -143,7 +151,7 @@ class FanPageCtrl extends GetxController {
   @override
   void onReady() {
     super.onReady();
-    FirebaseAuth.instance.userChanges().listen((user) {
+    _authApp.userChanges().listen((user) {
       _currentAccount.value =
           user != null ? UserAccountService.getUserAccountRef(user.uid) : null;
     });

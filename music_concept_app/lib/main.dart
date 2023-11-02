@@ -15,7 +15,6 @@ void main() async {
     () async {
       FlutterNativeSplash.remove();
       WidgetsFlutterBinding.ensureInitialized();
-      WidgetsBinding.instance.addObserver(LifeCycleObserver());
 
       await GetStorage.init();
 

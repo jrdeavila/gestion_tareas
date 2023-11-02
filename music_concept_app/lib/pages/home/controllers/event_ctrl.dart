@@ -1,11 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:music_concept_app/lib.dart';
 
 class CreateEventCtrl extends GetxController {
+  final FirebaseApp _app;
+
+  CreateEventCtrl(this._app);
+
+  FirebaseAuth get _authApp => FirebaseAuth.instanceFor(app: _app);
+
   final RxString _content = "".obs;
   final Rx<DateTime> _startDate = Rx(DateTime.now());
   final Rx<LatLng?> _point = Rx(null);
@@ -56,7 +63,7 @@ class CreateEventCtrl extends GetxController {
       );
     EventService.createEvent(
       eventRef: eventRef,
-      accountRef: "users/${FirebaseAuth.instance.currentUser!.uid}",
+      accountRef: "users/${_authApp.currentUser!.uid}",
       content: _content.validateEmpty(),
       point: _point.validateNull(
         label: "Ubicacion",
@@ -69,6 +76,12 @@ class CreateEventCtrl extends GetxController {
 }
 
 class EventCtrl extends GetxController {
+  final FirebaseApp _app;
+
+  EventCtrl(this._app);
+
+  FirebaseAuth get _authApp => FirebaseAuth.instanceFor(app: _app);
+
   Stream<int> getCountAssist({
     required String eventRef,
   }) =>
@@ -78,7 +91,7 @@ class EventCtrl extends GetxController {
     required String eventRef,
   }) {
     return EventService.hasAssistOnEvent(
-      accountRef: "users/${FirebaseAuth.instance.currentUser!.uid}",
+      accountRef: "users/${_authApp.currentUser!.uid}",
       eventRef: eventRef,
     );
   }
@@ -87,7 +100,7 @@ class EventCtrl extends GetxController {
     required String eventRef,
   }) {
     return EventService.createEventAssist(
-      accountRef: "users/${FirebaseAuth.instance.currentUser!.uid}",
+      accountRef: "users/${_authApp.currentUser!.uid}",
       eventRef: eventRef,
     );
   }
@@ -96,7 +109,7 @@ class EventCtrl extends GetxController {
     required String eventRef,
   }) {
     return EventService.deleteEventAssist(
-      accountRef: "users/${FirebaseAuth.instance.currentUser!.uid}",
+      accountRef: "users/${_authApp.currentUser!.uid}",
       eventRef: eventRef,
     );
   }

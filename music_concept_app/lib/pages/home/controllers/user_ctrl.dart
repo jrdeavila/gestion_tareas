@@ -12,11 +12,7 @@ class UserCtrl extends GetxController {
   @override
   void onReady() {
     super.onReady();
-    authInstances()
-        .firstWhere(
-          (element) => element.app.name == Get.find<FirebaseCtrl>().app,
-          orElse: () => FirebaseAuth.instance,
-        )
+    FirebaseAuth.instanceFor(app: Get.find<FirebaseCtrl>().defaultApp)
         .userChanges()
         .listen((user) {
       _user.value =
@@ -39,5 +35,14 @@ class UserCtrl extends GetxController {
     }..removeWhere((key, value) => value == null);
 
     return data.cast();
+  }
+
+  void addAccount() {
+    Get.find<FirebaseCtrl>().changeApp();
+    Get.toNamed(AppRoutes.login);
+  }
+
+  void changeAccount(String name) {
+    Get.find<FirebaseCtrl>().changeDefaultApp(name);
   }
 }

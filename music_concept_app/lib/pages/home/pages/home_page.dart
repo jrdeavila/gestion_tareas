@@ -169,7 +169,7 @@ class UserAppBarAction extends StatelessWidget {
             }).toList(),
             // Add account
             const PopupMenuItem(
-              value: null,
+              value: 'add',
               child: Row(
                 children: [
                   Icon(MdiIcons.plus),
@@ -184,10 +184,10 @@ class UserAppBarAction extends StatelessWidget {
           borderRadius: BorderRadius.circular(20.0),
         ),
         onSelected: (value) {
-          if (value == null) {
-            Get.toNamed(AppRoutes.register);
+          if (value == 'add') {
+            userCtrl.addAccount();
           } else {
-            Get.find<HomeCtrl>().goToProfile();
+            userCtrl.changeAccount(value);
           }
         },
         child: Obx(() => _buildUserImage(userCtrl.user)),

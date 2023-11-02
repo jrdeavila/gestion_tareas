@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -6,6 +7,9 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:music_concept_app/lib.dart';
 
 class AuthenticationCtrl extends GetxController {
+  final FirebaseApp _app;
+
+  AuthenticationCtrl(this._app);
   final Rx<User?> _firebaseUser = Rx<User?>(null);
   final _getStorage = GetStorage();
 
@@ -14,8 +18,9 @@ class AuthenticationCtrl extends GetxController {
     super.onReady();
     _firebaseUser.listen((p0) {
       if (p0 != null) {
-        Get.put(NotificationCtrl());
-        Get.put(BusinessNearlyCtrl());
+        final app = Get.find<FirebaseCtrl>().defaultApp;
+        Get.put(NotificationCtrl(app));
+        Get.put(BusinessNearlyCtrl(app));
         Get.put(UserCtrl());
         Get.lazyPut(() => HomeCtrl());
         Get.offAllNamed(AppRoutes.home);
@@ -30,14 +35,15 @@ class AuthenticationCtrl extends GetxController {
         }
       }
     });
-    _firebaseUser.bindStream(FirebaseAuth.instance.authStateChanges());
+    _firebaseUser
+        .bindStream(FirebaseAuth.instanceFor(app: _app).authStateChanges());
   }
 
   void login({
     required String email,
     required String password,
   }) {
-    FirebaseAuth.instance.signInWithEmailAndPassword(
+    FirebaseAuth.instanceFor(app: _app).signInWithEmailAndPassword(
       email: email,
       password: password,
     );
@@ -64,6 +70,7 @@ class AuthenticationCtrl extends GetxController {
       type: type,
       location: location,
       address: address,
+      firebaseApp: _app,
     );
     _getStorage.write('first-login', true);
   }
@@ -71,7 +78,7 @@ class AuthenticationCtrl extends GetxController {
   void resetPassword({
     required String email,
   }) {
-    FirebaseAuth.instance.sendPasswordResetEmail(
+    FirebaseAuth.instanceFor(app: _app).sendPasswordResetEmail(
       email: email,
     );
   }
@@ -85,7 +92,7 @@ class AuthenticationCtrl extends GetxController {
       accountRef: "users/${_firebaseUser.value!.uid}",
       businessRef: null,
     );
-    FirebaseAuth.instance.signOut();
+    FirebaseAuth.instanceFor(app: _app).signOut();
   }
 
   void addNewAccount() {}

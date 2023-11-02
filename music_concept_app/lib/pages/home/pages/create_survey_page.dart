@@ -17,7 +17,9 @@ class _CreateSurvePageState extends State<CreateSurvePage> {
   @override
   void initState() {
     super.initState();
-    Get.lazyPut(() => CreateSurverCtrl());
+    Get.lazyPut(() => CreateSurverCtrl(
+          Get.find<FirebaseCtrl>().defaultApp,
+        ));
     _scrollCtrl.addListener(() {
       _clipperOpacity = 1 - (_scrollCtrl.offset / 100).clamp(0, 1);
       setState(() {});

@@ -2,11 +2,18 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:music_concept_app/lib.dart';
 
 class BusinessNearlyCtrl extends GetxController {
+  final FirebaseApp _app;
+
+  BusinessNearlyCtrl(this._app);
+
+  FirebaseAuth get _authApp => FirebaseAuth.instanceFor(app: _app);
+
   final RxList<FdSnapshot> businesses = RxList();
   final Rx<Coordinates?> _coordinates = Rx(null);
   final Rx<FdSnapshot?> _onYouStay = Rx(null);
@@ -22,8 +29,8 @@ class BusinessNearlyCtrl extends GetxController {
   @override
   void onReady() {
     super.onReady();
-    _isAuthenticated.bindStream(
-        FirebaseAuth.instance.userChanges().map((event) => event != null));
+    _isAuthenticated
+        .bindStream(_authApp.userChanges().map((event) => event != null));
     _coordinates.bindStream(
       Geolocator.getPositionStream().map(
         (event) => Coordinates.fromMap(
@@ -32,7 +39,7 @@ class BusinessNearlyCtrl extends GetxController {
       ),
     );
     _user.bindStream(
-      FirebaseAuth.instance.userChanges().asyncMap<FdSnapshot>(
+      _authApp.userChanges().asyncMap<FdSnapshot>(
             (event) => UserAccountService.getUserAccountRef(event!.uid).get(),
           ),
     );
@@ -97,12 +104,12 @@ class BusinessNearlyCtrl extends GetxController {
   // Primera revision si esta en la zona, segunda revision registra el establecimiento visitado
   void _registerYouStayOnaBsns(FdSnapshot? snapshot) {
     BusinessService.setCurrentVisit(
-      accountRef: "users/${FirebaseAuth.instance.currentUser!.uid}",
+      accountRef: "users/${_authApp.currentUser!.uid}",
       businessRef: snapshot?.reference.path,
     );
     if (snapshot != null) {
       BusinessService.createBusinessVisit(
-        accountRef: "users/${FirebaseAuth.instance.currentUser!.uid}",
+        accountRef: "users/${_authApp.currentUser!.uid}",
         businessRef: snapshot.reference.path,
       );
     }

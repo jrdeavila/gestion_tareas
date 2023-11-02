@@ -1,10 +1,17 @@
 import 'dart:typed_data';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:get/get.dart';
 import 'package:music_concept_app/lib.dart';
 
 class CreateSurverCtrl extends GetxController {
+  final FirebaseApp _app;
+
+  CreateSurverCtrl(this._app);
+
+  FirebaseAuth get _authApp => FirebaseAuth.instanceFor(app: _app);
+
   final RxList<Map> options = RxList<Map>([
     {"value": "", "image": null},
     {"value": "", "image": null},
@@ -62,7 +69,7 @@ class CreateSurverCtrl extends GetxController {
   void submit() async {
     _isUploading.value = true;
     await SurveyService.createSurvey(
-      accountRef: "users/${FirebaseAuth.instance.currentUser?.uid}",
+      accountRef: "users/${_authApp.currentUser?.uid}",
       content: _content.value,
       options: options,
       allowMultipleVotes: allowMultipleVotes,
@@ -75,6 +82,12 @@ class CreateSurverCtrl extends GetxController {
 }
 
 class FollowerEditSurveyItemsCtrl extends GetxController {
+  final FirebaseApp _app;
+
+  FollowerEditSurveyItemsCtrl(this._app);
+
+  FirebaseAuth get _authApp => FirebaseAuth.instanceFor(app: _app);
+
   final RxString _content = ''.obs;
   final Rx<Uint8List?> _image = Rx<Uint8List?>(null);
   final RxInt currentOptions = RxInt(0);
@@ -123,7 +136,7 @@ class FollowerEditSurveyItemsCtrl extends GetxController {
       surveyRef: "posts/${_surveyRef.value}",
       value: _content.value,
       image: _image.value,
-      accountRef: "users/${FirebaseAuth.instance.currentUser?.uid}",
+      accountRef: "users/${_authApp.currentUser?.uid}",
     ).then((value) {
       _isNew.value = false;
       _content.value = "";
