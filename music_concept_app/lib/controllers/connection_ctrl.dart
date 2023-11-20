@@ -53,14 +53,11 @@ class ConnectionCtrl extends GetxController {
 
   Future<void> _request() async {
     try {
-      final result = await Process.run('ping', ['-c', '5', 'google.com']);
-
-      if (result.exitCode == 0) {
+      final result = await InternetAddress.lookup("google.com");
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
         _times.value = 0;
-      } else {
-        _times.value++;
       }
-    } catch (e) {
+    } on SocketException catch (_) {
       _times.value++;
     }
   }
