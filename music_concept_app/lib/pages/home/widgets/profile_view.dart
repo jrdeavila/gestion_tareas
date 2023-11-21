@@ -265,12 +265,30 @@ class _ProfileViewState extends State<ProfileView> {
                         fontSize: 40.0,
                       ),
                       const SizedBox(height: 20.0),
-                      Text(
-                        data?['name'] ?? '',
-                        style: const TextStyle(
-                          fontSize: 25.0,
-                          fontWeight: FontWeight.bold,
-                        ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            data?['name'] ?? '',
+                            style: const TextStyle(
+                              fontSize: 25.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(width: 10.0),
+                          ImagePicker(
+                            canRemove: false,
+                            onImageSelected: (image) {
+                              if (image == null) return;
+                              Get.find<ProfileCtrl>().changeAvatar(image);
+                            },
+                            child: const Icon(
+                              Icons.camera_alt,
+                              size: 30.0,
+                            ),
+                          )
+                        ],
                       ),
                       if (data?['currentVisit'] != null) ...[
                         const SizedBox(

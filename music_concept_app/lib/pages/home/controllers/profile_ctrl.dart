@@ -206,38 +206,6 @@ final accountOptions = {
       return;
     },
   },
-  'update-profile-image': {
-    "label": "Cambiar foto de perfil",
-    "icon": MdiIcons.image,
-    "onTap": (TapUpDetails details, BuildContext context) {
-      showMenuImageOptions(
-        context: context,
-        details: details,
-        canRemove: false,
-      ).then((value) {
-        if (value is ResultImagePicker) {
-          Get.find<ProfileCtrl>().changeAvatar(value.image!);
-        }
-      });
-      return;
-    },
-  },
-  'update-profile-background': {
-    "label": "Cambiar fondo de perfil",
-    "icon": MdiIcons.image,
-    "onTap": (TapUpDetails details, BuildContext context) {
-      showMenuImageOptions(
-        context: context,
-        details: details,
-        canRemove: false,
-      ).then((value) {
-        if (value is ResultImagePicker) {
-          Get.find<ProfileCtrl>().changeCustomWallpaper(value.image!);
-        }
-      });
-      return;
-    },
-  },
 };
 
 int accountTypeIndex(UserAccountType type) {

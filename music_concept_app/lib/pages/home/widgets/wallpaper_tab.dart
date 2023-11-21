@@ -10,31 +10,76 @@ class WallpaperTabView extends StatelessWidget {
   Widget build(BuildContext context) {
     final ctrl = Get.find<ProfileCtrl>();
     return Obx(() {
-      return MasonryGridView.builder(
-        physics: const NeverScrollableScrollPhysics(),
-        gridDelegate: const SliverSimpleGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-        ),
-        itemBuilder: (context, index) {
-          return Padding(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 5.0, vertical: 10.0),
-            child: GestureDetector(
-              onTap: () {
-                ctrl.selectWallpaper(ctrl.wallpapers[index]);
-              },
-              child: ClipRRect(
+      return Column(
+        children: [
+          ImagePicker(
+            onImageSelected: (image) {
+              if (image != null) {
+                ctrl.changeCustomWallpaper(image);
+              }
+            },
+            child: Container(
+              margin: const EdgeInsets.symmetric(
+                horizontal: 10.0,
+              ),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 20.0,
+                vertical: 30.0,
+              ),
+              decoration: BoxDecoration(
+                color: Get.theme.colorScheme.onBackground,
                 borderRadius: BorderRadius.circular(20.0),
-                child: Image.asset(
-                  ctrl.wallpapers[index],
-                  height: index.isEven ? 200 : 150,
-                  fit: BoxFit.cover,
-                ),
+              ),
+              child: const Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.wallpaper,
+                    size: 30.0,
+                  ),
+                  SizedBox(width: 10.0),
+                  Text(
+                    'Agregar Fondo personalizado',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20.0,
+                    ),
+                  ),
+                ],
               ),
             ),
-          );
-        },
-        itemCount: ctrl.wallpapers.length,
+          ),
+          Expanded(
+            child: MasonryGridView.builder(
+              physics: const NeverScrollableScrollPhysics(),
+              gridDelegate:
+                  const SliverSimpleGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+              ),
+              itemBuilder: (context, index) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 5.0,
+                  ),
+                  child: GestureDetector(
+                    onTap: () {
+                      ctrl.selectWallpaper(ctrl.wallpapers[index]);
+                    },
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(20.0),
+                      child: Image.asset(
+                        ctrl.wallpapers[index],
+                        height: index.isEven ? 200 : 150,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                );
+              },
+              itemCount: ctrl.wallpapers.length,
+            ),
+          ),
+        ],
       );
     });
   }
