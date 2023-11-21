@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
@@ -437,27 +438,30 @@ class _BackgroundProfileState extends State<BackgroundProfile> {
               snapshot.data?.data()?['background'] != null;
           final hasCustomBackground =
               snapshot.data?.data()?['wallpaper'] != null;
-          dynamic background = hasCustomBackground
-              ? NetworkImage(snapshot.data?.data()?['wallpaper'])
-              : AssetImage(snapshot.data?.data()?['background'] ??
-                  ctrl.selectedWallpaper);
+          dynamic background = AssetImage(
+              snapshot.data?.data()?['background'] ?? ctrl.selectedWallpaper);
 
           return Opacity(
             opacity: _backgroundOpacity,
-            child: Container(
-              margin: const EdgeInsets.only(
-                top: kToolbarHeight - 20,
-              ),
-              decoration: BoxDecoration(
-                image: hasBackground
-                    ? DecorationImage(
-                        image: background,
-                        fit: BoxFit.cover,
-                      )
-                    : null,
-                borderRadius: BorderRadius.circular(30.0),
-              ),
-            ),
+            child: hasCustomBackground
+                ? CachedNetworkImage(
+                    imageUrl: snapshot.data?.data()?['wallpaper'],
+                    fit: BoxFit.cover,
+                  )
+                : Container(
+                    margin: const EdgeInsets.only(
+                      top: kToolbarHeight - 20,
+                    ),
+                    decoration: BoxDecoration(
+                      image: hasBackground
+                          ? DecorationImage(
+                              image: background,
+                              fit: BoxFit.cover,
+                            )
+                          : null,
+                      borderRadius: BorderRadius.circular(30.0),
+                    ),
+                  ),
           );
         });
   }
