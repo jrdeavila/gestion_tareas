@@ -27,7 +27,7 @@ class WallpaperTabView extends StatelessWidget {
                 vertical: 30.0,
               ),
               decoration: BoxDecoration(
-                color: Get.theme.colorScheme.onBackground,
+                color: Get.theme.colorScheme.primary,
                 borderRadius: BorderRadius.circular(20.0),
               ),
               child: const Row(
