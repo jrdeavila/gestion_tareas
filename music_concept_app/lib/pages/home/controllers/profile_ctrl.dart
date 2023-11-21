@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 import 'package:get/get.dart';
@@ -171,21 +172,70 @@ class ProfileCtrl extends GetxController {
       image: image,
     );
   }
+
+  void changeCustomWallpaper(Uint8List uint8list) {
+    UserAccountService.changeWallpaper(
+      accountRef: _authApp.currentUser!.uid,
+      image: uint8list,
+    );
+  }
 }
 
 final accountOptions = {
   'view-profile-details': {
     "label": "Ver perfil",
     "icon": MdiIcons.account,
-    "onTap": () {
+    "onTap": (TapUpDetails details, BuildContext context) {
       Get.toNamed(AppRoutes.profileDetails);
+      return;
     },
   },
   'settings-app': {
     "label": "Configuración de la aplicación",
     "icon": MdiIcons.cog,
-    "onTap": () {
+    "onTap": (TapUpDetails details, BuildContext context) {
       Get.toNamed(AppRoutes.settings);
+      return;
+    },
+  },
+  "settings-privacy": {
+    "label": "Configuración de la cuenta",
+    "icon": MdiIcons.accountCog,
+    "onTap": (TapUpDetails details, BuildContext context) {
+      Get.toNamed(AppRoutes.settingsPrivacy);
+      return;
+    },
+  },
+  'update-profile-image': {
+    "label": "Cambiar foto de perfil",
+    "icon": MdiIcons.image,
+    "onTap": (TapUpDetails details, BuildContext context) {
+      showMenuImageOptions(
+        context: context,
+        details: details,
+        canRemove: false,
+      ).then((value) {
+        if (value is ResultImagePicker) {
+          Get.find<ProfileCtrl>().changeAvatar(value.image!);
+        }
+      });
+      return;
+    },
+  },
+  'update-profile-background': {
+    "label": "Cambiar fondo de perfil",
+    "icon": MdiIcons.image,
+    "onTap": (TapUpDetails details, BuildContext context) {
+      showMenuImageOptions(
+        context: context,
+        details: details,
+        canRemove: false,
+      ).then((value) {
+        if (value is ResultImagePicker) {
+          Get.find<ProfileCtrl>().changeCustomWallpaper(value.image!);
+        }
+      });
+      return;
     },
   },
 };

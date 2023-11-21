@@ -82,6 +82,24 @@ abstract class UserAccountService {
     return imagePath;
   }
 
+  static Future<String> setWallpaper({
+    required String accountRef,
+    required Uint8List image,
+  }) async {
+    final imagePath = await FirebaseStorageService.uploadFile(
+      path: "users/$accountRef/wallpaper",
+      fileName: "wallpaper",
+      fileExtension: "jpg",
+      fileData: base64.encode(image),
+      format: PutStringFormat.base64,
+      metadata: SettableMetadata(
+        contentType: "image/jpeg",
+      ),
+    );
+
+    return imagePath;
+  }
+
   static Future<void> changeAvatar({
     required Uint8List image,
     required String accountRef,
@@ -93,6 +111,20 @@ abstract class UserAccountService {
         .doc(accountRef)
         .update({
       "image": path,
+    });
+  }
+
+  static Future<void> changeWallpaper({
+    required Uint8List image,
+    required String accountRef,
+  }) async {
+    var path = await setWallpaper(accountRef: accountRef, image: image);
+
+    return FirebaseFirestore.instance
+        .collection("users")
+        .doc(accountRef)
+        .update({
+      "wallpaper": path,
     });
   }
 

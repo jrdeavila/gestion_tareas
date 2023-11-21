@@ -6,6 +6,7 @@ abstract class BackgroundService {
     return FirebaseFirestore.instance.runTransaction((transaction) async {
       transaction.update(FirebaseFirestore.instance.doc(accountRef), {
         'background': assetPath,
+        "wallpaper": null,
       });
     });
   }

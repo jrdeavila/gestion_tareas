@@ -47,18 +47,25 @@ class HomeDrawer extends StatelessWidget {
                   height: 20.0,
                 ),
                 ...accountOptions.keys.map(
-                  (e) => ListTile(
-                    onTap: () {
-                      (accountOptions[e]!['onTap'] as VoidCallback)();
+                  (e) => GestureDetector(
+                    onTapUp: (details) {
+                      final onTap =
+                          accountOptions[e]!["onTap"] as void Function(
+                        TapUpDetails details,
+                        BuildContext context,
+                      );
+                      onTap(details, context);
                     },
-                    leading: Icon(
-                      accountOptions[e]!["icon"] as IconData,
-                      size: 30,
-                    ),
-                    title: Text(
-                      accountOptions[e]!["label"] as String,
-                      style: const TextStyle(
-                        fontSize: 15.0,
+                    child: ListTile(
+                      leading: Icon(
+                        accountOptions[e]!["icon"] as IconData,
+                        size: 30,
+                      ),
+                      title: Text(
+                        accountOptions[e]!["label"] as String,
+                        style: const TextStyle(
+                          fontSize: 15.0,
+                        ),
                       ),
                     ),
                   ),

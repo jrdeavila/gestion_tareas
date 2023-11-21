@@ -396,29 +396,6 @@ class _ProfileViewState extends State<ProfileView> {
                 );
               }),
         ),
-        Positioned(
-          bottom: 0,
-          right: 0,
-          height: 60,
-          width: 100,
-          child: ImagePicker(
-            canRemove: false,
-            onImageSelected: (image) {
-              if (image != null) {
-                Get.find<ProfileCtrl>().changeAvatar(image);
-              }
-            },
-            child: const Column(
-              children: [
-                Icon(
-                  MdiIcons.camera,
-                  color: Colors.grey,
-                ),
-                Text("Editar", style: TextStyle(color: Colors.grey)),
-              ],
-            ),
-          ),
-        )
       ],
     );
   }
@@ -456,6 +433,15 @@ class _BackgroundProfileState extends State<BackgroundProfile> {
     return StreamBuilder(
         stream: ctrl.getAccountStream(),
         builder: (context, snapshot) {
+          final hasBackground = ctrl.selectedWallpaper != null ||
+              snapshot.data?.data()?['background'] != null;
+          final hasCustomBackground =
+              snapshot.data?.data()?['wallpaper'] != null;
+          dynamic background = hasCustomBackground
+              ? NetworkImage(snapshot.data?.data()?['wallpaper'])
+              : AssetImage(snapshot.data?.data()?['background'] ??
+                  ctrl.selectedWallpaper);
+
           return Opacity(
             opacity: _backgroundOpacity,
             child: Container(
@@ -463,12 +449,9 @@ class _BackgroundProfileState extends State<BackgroundProfile> {
                 top: kToolbarHeight - 20,
               ),
               decoration: BoxDecoration(
-                image: ctrl.selectedWallpaper != null ||
-                        snapshot.data?.data()?['background'] != null
+                image: hasBackground
                     ? DecorationImage(
-                        image: AssetImage(
-                            snapshot.data?.data()?['background'] ??
-                                ctrl.selectedWallpaper),
+                        image: background,
                         fit: BoxFit.cover,
                       )
                     : null,

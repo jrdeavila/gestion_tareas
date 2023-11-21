@@ -76,12 +76,11 @@ class _ImagePickerState extends State<ImagePicker> {
   }
 
   void _showMenu(TapUpDetails details) {
-    dialogBuilder<ResultImagePicker>(
-        context,
-        details.globalPosition,
-        SelectImageMenu(
-          canRemove: widget.canRemove,
-        )).then((value) {
+    showMenuImageOptions(
+      context: context,
+      details: details,
+      canRemove: widget.canRemove,
+    ).then((value) {
       if (value is ResultImagePicker) {
         if (value.remove) {
           setState(() {
@@ -96,6 +95,19 @@ class _ImagePickerState extends State<ImagePicker> {
       widget.onImageSelected?.call(_image);
     });
   }
+}
+
+Future<ResultImagePicker?> showMenuImageOptions({
+  required BuildContext context,
+  required TapUpDetails details,
+  required bool canRemove,
+}) {
+  return dialogBuilder<ResultImagePicker>(
+      context,
+      details.globalPosition,
+      SelectImageMenu(
+        canRemove: canRemove,
+      ));
 }
 
 class SelectImageMenu extends StatelessWidget {

@@ -26,6 +26,7 @@ abstract class AppRoutes {
   static const String chat = "/chat";
   static const String followers = "/followers";
   static const String profileDetails = '/profile-details';
+  static const String settingsPrivacy = '/settings-privacy';
 
   static const String initialRoute = root;
   static final Map<String, Widget Function(BuildContext context)> routes = {
@@ -47,5 +48,6 @@ abstract class AppRoutes {
     chat: (context) => ChatPage(conversationRef: Get.arguments),
     followers: (context) => FollowersPage(guest: Get.arguments),
     profileDetails: (context) => ProfileDetailsPage(guest: Get.arguments),
+    settingsPrivacy: (context) => const SettingsPrivacyPage(),
   };
 }
