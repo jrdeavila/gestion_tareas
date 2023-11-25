@@ -217,6 +217,34 @@ abstract class UserAccountService {
       "maritalStatus": value,
     });
   }
+
+  static Future<SettingsPrivacyView> getProfileStatusVisibility(
+      String accountRef) {
+    return FirebaseFirestore.instance.doc(accountRef).get().then(
+        (value) => privacyFromValue(value.data()!["profileStatusVisibility"]));
+  }
+
+  static Future<void> changeProfileStatusVisibility(
+      {required String accountRef, required SettingsPrivacyView value}) {
+    return FirebaseFirestore.instance.doc(accountRef).update({
+      "profileStatusVisibility": privacyViewValue(value),
+    });
+  }
+
+  static Future<SettingsPrivacyView> getProfileBusinessStatusVisibility(
+      String accountRef) {
+    return FirebaseFirestore.instance.doc(accountRef).get().then(
+          (value) => privacyFromValue(
+              value.data()!["profileBusinessStatusVisibility"]),
+        );
+  }
+
+  static Future<void> changeProfileBusinessStatusVisibility(
+      {required String accountRef, required SettingsPrivacyView value}) {
+    return FirebaseFirestore.instance.doc(accountRef).update({
+      "profileBusinessStatusVisibility": privacyViewValue(value),
+    });
+  }
 }
 
 enum UserAccountType {

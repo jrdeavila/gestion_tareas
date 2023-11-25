@@ -243,21 +243,29 @@ class _ProfileViewState extends State<ProfileView> {
               ),
               builder: (context, snapshot) {
                 var data = snapshot.data?.data();
+                final cantViewStatus =
+                    privacyFromValue(data?['profileStatusVisibility']) ==
+                        SettingsPrivacyView.nobody;
+
                 var hasAddress = data?['address'] != null;
                 var hasActiveStatus = data?.containsKey('active') ?? false
                     ? data!['active']
                     : false;
                 var hasLastActive = data?['lastActive'] != null;
-                lastActiveString = hasLastActive
-                    ? "Activo ${data?['active'] ?? false ? "ahora" : TimeUtils.timeagoFormat(data?["lastActive"].toDate())}"
-                    : lastActiveString;
+                lastActiveString = cantViewStatus
+                    ? ""
+                    : hasLastActive
+                        ? "Activo ${data?['active'] ?? false ? "ahora" : TimeUtils.timeagoFormat(data?["lastActive"].toDate())}"
+                        : lastActiveString;
                 final profileVisibilityEveryone =
                     privacyFromValue(data?['profileAvatarVisibility']) ==
                         SettingsPrivacyView.everyone;
                 final image = data?['image'];
                 final isACurrentAccount =
                     controller.isCurrentAccount(widget.guest?.reference.path);
-
+                final cantViewBusinessStatus = privacyFromValue(snapshot.data
+                        ?.data()?["profileBusinessStatusVisibility"]) ==
+                    SettingsPrivacyView.nobody;
                 return Padding(
                   padding: const EdgeInsets.all(20.0),
                   child: Column(
@@ -265,14 +273,16 @@ class _ProfileViewState extends State<ProfileView> {
                     children: [
                       ProfileImage(
                         isBusiness: data?['type'] == 0,
-                        hasVisit: data?['currentVisit'] != null,
+                        hasVisit: cantViewBusinessStatus
+                            ? false
+                            : data?['currentVisit'] != null,
                         name: data?['name'],
                         image: isACurrentAccount
                             ? image
                             : profileVisibilityEveryone
                                 ? image
                                 : null,
-                        active: hasActiveStatus,
+                        active: cantViewStatus ? false : hasActiveStatus,
                         avatarSize: 130.0,
                         fontSize: 40.0,
                       ),

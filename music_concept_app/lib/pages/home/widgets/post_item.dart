@@ -413,6 +413,12 @@ class PostUserAccountDetails extends StatelessWidget {
             final visibility = privacyFromValue(
                 snapshot.data?.data()?["profileAvatarVisibility"]);
             final noBodyCanView = visibility == SettingsPrivacyView.nobody;
+            final cantViewStatus = privacyFromValue(
+                    snapshot.data?.data()?["profileStatusVisibility"]) ==
+                SettingsPrivacyView.nobody;
+            final cantViewBusinessStatus = privacyFromValue(snapshot.data
+                    ?.data()?["profileBusinessStatusVisibility"]) ==
+                SettingsPrivacyView.nobody;
             return GestureDetector(
               onTap: () {
                 if (snapshot.hasData) {
@@ -422,9 +428,13 @@ class PostUserAccountDetails extends StatelessWidget {
               child: Row(
                 children: [
                   ProfileImage(
-                    hasVisit: snapshot.data?.data()?["currentVisit"] != null,
-                    active: hasActiveStatus &&
-                        (snapshot.data?.data()?["active"] ?? false),
+                    hasVisit: cantViewBusinessStatus
+                        ? false
+                        : snapshot.data?.data()?["currentVisit"] != null,
+                    active: cantViewStatus
+                        ? false
+                        : hasActiveStatus &&
+                            (snapshot.data?.data()?["active"] ?? false),
                     image: noBodyCanView ? null : image,
                     name: name,
                     avatarSize: isDetails ? 60.0 : 40.0,

@@ -28,15 +28,30 @@ class SettingsPrivacyPage extends StatelessWidget {
                   )),
             ),
             ListTile(
-              title: const Text("Privacidad de las publicaciones"),
+              title: const Text("Estado en linea"),
               subtitle: const Text(
-                "Controla quien puede ver tus publicaciones",
+                "Puedes configurar que personas pueden ver cuando estes en linea",
               ),
-              trailing: DropdownPrivacyView(
-                value: SettingsPrivacyView.friends,
-                onChange: (p0) {},
-              ),
+              trailing: Obx(() => DropdownPrivacyView(
+                    value: controller.profileStatusVisibility,
+                    onChange: (p0) {
+                      controller.changeProfileStatusVisibility(p0);
+                    },
+                  )),
             ),
+            ListTile(
+                title: const Text("Compartiendo en establecimiento"),
+                subtitle: const Text(
+                  "Puedes configurar que personas pueden ver cuando estes compartiendo en un establecimiento",
+                ),
+                trailing: Obx(
+                  () => DropdownPrivacyView(
+                    value: controller.profileBusinessStatusVisibility,
+                    onChange: (p0) {
+                      controller.changeProfileBusinessStatusVisibility(p0);
+                    },
+                  ),
+                )),
           ],
         ));
   }
