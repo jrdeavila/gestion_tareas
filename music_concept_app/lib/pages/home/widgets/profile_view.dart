@@ -452,8 +452,7 @@ class _BackgroundProfileState extends State<BackgroundProfile> {
     return StreamBuilder(
         stream: ctrl.getAccountStream(),
         builder: (context, snapshot) {
-          final hasBackground = ctrl.selectedWallpaper != null ||
-              snapshot.data?.data()?['background'] != null;
+          final hasBackground = snapshot.data?.data()?['background'] != null;
           final hasCustomBackground =
               snapshot.data?.data()?['wallpaper'] != null;
           dynamic background = AssetImage(

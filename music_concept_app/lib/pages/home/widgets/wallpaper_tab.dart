@@ -38,11 +38,14 @@ class WallpaperTabView extends StatelessWidget {
                     size: 30.0,
                   ),
                   SizedBox(width: 10.0),
-                  Text(
-                    'Agregar Fondo personalizado',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20.0,
+                  Expanded(
+                    child: Text(
+                      'Agregar Fondo personalizado',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20.0,
+                      ),
+                      textAlign: TextAlign.center,
                     ),
                   ),
                 ],

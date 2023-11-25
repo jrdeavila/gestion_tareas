@@ -19,7 +19,7 @@ class ProfileCtrl extends GetxController {
   final RxList<String> wallpapers = RxList();
   final Rx<String?> _selectedWallpaper = Rx<String?>(null);
 
-  String? get selectedWallpaper => _selectedWallpaper.value;
+  String get selectedWallpaper => _selectedWallpaper.value ?? "fondo_1.jpg";
 
   Stream<DocumentSnapshot<Map<String, dynamic>>> getAccountStream(
       [String? accountRef]) {
