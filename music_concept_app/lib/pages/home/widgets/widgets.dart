@@ -15,6 +15,7 @@ export 'popup.dart';
 export 'post_dialog.dart';
 export 'post_item.dart';
 export 'post_skeleton.dart';
+export 'profile_background.dart';
 export 'profile_image.dart';
 export 'profile_view.dart';
 export 'reed_view.dart';

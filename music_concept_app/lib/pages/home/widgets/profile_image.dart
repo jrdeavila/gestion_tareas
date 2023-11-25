@@ -42,14 +42,25 @@ class ProfileImage extends StatelessWidget {
                   Positioned.fill(
                     child: Builder(builder: (context) {
                       if (hasImage) {
-                        return ClipRRect(
-                          borderRadius:
-                              BorderRadius.circular(avatarSize / percent),
-                          child: CachingImage(
-                            url: image!,
-                            fit: BoxFit.cover,
-                            height: avatarSize,
-                            width: avatarWidth,
+                        return Container(
+                          height: avatarSize,
+                          width: avatarSize,
+                          decoration: BoxDecoration(
+                            color: Get.theme.colorScheme.onPrimary,
+                            borderRadius:
+                                BorderRadius.circular(avatarSize / percent),
+                          ),
+                          child: Center(
+                            child: ClipRRect(
+                              borderRadius:
+                                  BorderRadius.circular(avatarSize / percent),
+                              child: CachingImage(
+                                url: image!,
+                                fit: BoxFit.cover,
+                                height: avatarSize - 3,
+                                width: avatarSize - 3,
+                              ),
+                            ),
                           ),
                         );
                       } else {
