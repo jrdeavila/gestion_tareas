@@ -138,6 +138,13 @@ class AccountList extends StatelessWidget {
         return StreamBuilder(
             stream: Get.find<ProfileCtrl>().getAccountStream(related),
             builder: (context, snapshot) {
+              var image = snapshot.data?.data()?['image'];
+              var name = snapshot.data?.data()?['name'];
+              var active = snapshot.data?.data()?['active'] ?? false;
+              var hasVisit = snapshot.data?.data()?['currentVisit'] != null;
+              var privacy = privacyFromValue(
+                  snapshot.data?.data()?['profileAvatarVisibility']);
+              var noBodyCanView = privacy == SettingsPrivacyView.nobody;
               return ListTile(
                 onTap: () {
                   if (snapshot.hasData) {
@@ -148,12 +155,12 @@ class AccountList extends StatelessWidget {
                   }
                 },
                 leading: ProfileImage(
-                  image: snapshot.data?.data()?['image'],
-                  name: snapshot.data?.data()?['name'],
-                  active: snapshot.data?.data()?['active'] ?? false,
-                  hasVisit: snapshot.data?.data()?['currentVisit'] != null,
+                  image: noBodyCanView ? null : image,
+                  name: name,
+                  active: active,
+                  hasVisit: hasVisit,
                 ),
-                title: Text(snapshot.data?.data()?['name'] ?? "*****"),
+                title: Text(name ?? "*****"),
               );
             });
       },

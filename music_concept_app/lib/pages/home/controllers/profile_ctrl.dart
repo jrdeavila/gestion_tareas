@@ -179,6 +179,11 @@ class ProfileCtrl extends GetxController {
       image: uint8list,
     );
   }
+
+  bool isCurrentAccount(String? path) {
+    if (path == null) return true;
+    return "users/${_authApp.currentUser!.uid}" == path;
+  }
 }
 
 final accountOptions = {

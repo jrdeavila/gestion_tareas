@@ -8,7 +8,54 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:music_concept_app/lib.dart';
 
+enum SettingsPrivacyView {
+  friends,
+  nobody,
+  everyone,
+}
+
+String privacyViewValue(SettingsPrivacyView view) {
+  return {
+    SettingsPrivacyView.friends: "friends",
+    SettingsPrivacyView.nobody: "nobody",
+    SettingsPrivacyView.everyone: "everyone",
+  }[view]!;
+}
+
+String privacyViewLabel(view) {
+  return {
+    SettingsPrivacyView.friends: "Amigos",
+    SettingsPrivacyView.nobody: "Nadie",
+    SettingsPrivacyView.everyone: "Todos",
+  }[view]!;
+}
+
+SettingsPrivacyView privacyFromValue(String? value) {
+  if (value == null) return SettingsPrivacyView.everyone;
+  return {
+    "friends": SettingsPrivacyView.friends,
+    "nobody": SettingsPrivacyView.nobody,
+    "everyone": SettingsPrivacyView.everyone,
+  }[value]!;
+}
+
 abstract class UserAccountService {
+  static Future<void> changeProfileAvatarVisibility({
+    required String accountRef,
+    required SettingsPrivacyView value,
+  }) {
+    return FirebaseFirestore.instance.doc(accountRef).update({
+      "profileAvatarVisibility": privacyViewValue(value),
+    });
+  }
+
+  static Future<SettingsPrivacyView> getProfileAvatarVisibility(
+      String accountRef) async {
+    final doc = await FirebaseFirestore.instance.doc(accountRef).get();
+    final value = doc.data()!["profileAvatarVisibility"] as String?;
+    return privacyFromValue(value);
+  }
+
   static Future<List<QueryDocumentSnapshot<Map<String, dynamic>>>>
       searchAccounts(
     String searchText, {

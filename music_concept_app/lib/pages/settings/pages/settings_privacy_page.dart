@@ -1,24 +1,14 @@
 import 'package:flutter/material.dart';
-
-enum SettingsPrivacyView {
-  friends,
-  nobody,
-  everyone,
-}
-
-String privavyViewLabel(view) {
-  return {
-    SettingsPrivacyView.friends: "Amigos",
-    SettingsPrivacyView.nobody: "Nadie",
-    SettingsPrivacyView.everyone: "Todos",
-  }[view]!;
-}
+import 'package:get/get.dart';
+import 'package:music_concept_app/lib.dart';
 
 class SettingsPrivacyPage extends StatelessWidget {
   const SettingsPrivacyPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final controller =
+        Get.put(PrivacyCtrl(Get.find<FirebaseCtrl>().defaultApp));
     return Scaffold(
         appBar: AppBar(
           title: const Text("Configuracion de privacidad"),
@@ -30,9 +20,12 @@ class SettingsPrivacyPage extends StatelessWidget {
               subtitle: const Text(
                 "Controla quien puede ver tu foto de perfil",
               ),
-              trailing: DropdownPrivacyView(
-                onChange: (p0) {},
-              ),
+              trailing: Obx(() => DropdownPrivacyView(
+                    value: controller.profileAvatarVisibility,
+                    onChange: (p0) {
+                      controller.changeProfileAvatarVisibility(p0);
+                    },
+                  )),
             ),
             ListTile(
               title: const Text("Privacidad de las publicaciones"),
@@ -66,15 +59,15 @@ class DropdownPrivacyView extends StatelessWidget {
         items: [
           DropdownMenuItem(
             value: SettingsPrivacyView.friends,
-            child: Text(privavyViewLabel(SettingsPrivacyView.friends)),
+            child: Text(privacyViewLabel(SettingsPrivacyView.friends)),
           ),
           DropdownMenuItem(
             value: SettingsPrivacyView.nobody,
-            child: Text(privavyViewLabel(SettingsPrivacyView.nobody)),
+            child: Text(privacyViewLabel(SettingsPrivacyView.nobody)),
           ),
           DropdownMenuItem(
             value: SettingsPrivacyView.everyone,
-            child: Text(privavyViewLabel(SettingsPrivacyView.everyone)),
+            child: Text(privacyViewLabel(SettingsPrivacyView.everyone)),
           ),
         ]);
   }

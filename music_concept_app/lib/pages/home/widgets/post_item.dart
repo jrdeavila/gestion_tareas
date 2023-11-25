@@ -408,6 +408,11 @@ class PostUserAccountDetails extends StatelessWidget {
           builder: (context, snapshot) {
             var hasActiveStatus =
                 snapshot.data?.data()?.containsKey("active") ?? false;
+            var image = snapshot.data?['image'];
+            var name = snapshot.data?['name'];
+            final visibility = privacyFromValue(
+                snapshot.data?.data()?["profileAvatarVisibility"]);
+            final noBodyCanView = visibility == SettingsPrivacyView.nobody;
             return GestureDetector(
               onTap: () {
                 if (snapshot.hasData) {
@@ -420,8 +425,8 @@ class PostUserAccountDetails extends StatelessWidget {
                     hasVisit: snapshot.data?.data()?["currentVisit"] != null,
                     active: hasActiveStatus &&
                         (snapshot.data?.data()?["active"] ?? false),
-                    image: snapshot.data?['image'],
-                    name: snapshot.data?['name'],
+                    image: noBodyCanView ? null : image,
+                    name: name,
                     avatarSize: isDetails ? 60.0 : 40.0,
                     fontSize: isDetails ? 30.0 : 20.0,
                   ),

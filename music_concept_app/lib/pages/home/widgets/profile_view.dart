@@ -232,12 +232,13 @@ class _ProfileViewState extends State<ProfileView> {
 
   Widget _accountDetails() {
     String lastActiveString = "";
+    var controller = Get.find<ProfileCtrl>();
     return Stack(
       children: [
         Align(
           alignment: Alignment.center,
           child: StreamBuilder(
-              stream: Get.find<ProfileCtrl>().getAccountStream(
+              stream: controller.getAccountStream(
                 widget.guest?.reference.path,
               ),
               builder: (context, snapshot) {
@@ -250,6 +251,13 @@ class _ProfileViewState extends State<ProfileView> {
                 lastActiveString = hasLastActive
                     ? "Activo ${data?['active'] ?? false ? "ahora" : TimeUtils.timeagoFormat(data?["lastActive"].toDate())}"
                     : lastActiveString;
+                final profileVisibilityEveryone =
+                    privacyFromValue(data?['profileAvatarVisibility']) ==
+                        SettingsPrivacyView.everyone;
+                final image = data?['image'];
+                final isACurrentAccount =
+                    controller.isCurrentAccount(widget.guest?.reference.path);
+
                 return Padding(
                   padding: const EdgeInsets.all(20.0),
                   child: Column(
@@ -259,7 +267,11 @@ class _ProfileViewState extends State<ProfileView> {
                         isBusiness: data?['type'] == 0,
                         hasVisit: data?['currentVisit'] != null,
                         name: data?['name'],
-                        image: data?['image'],
+                        image: isACurrentAccount
+                            ? image
+                            : profileVisibilityEveryone
+                                ? image
+                                : null,
                         active: hasActiveStatus,
                         avatarSize: 130.0,
                         fontSize: 40.0,
@@ -276,18 +288,20 @@ class _ProfileViewState extends State<ProfileView> {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          const SizedBox(width: 10.0),
-                          ImagePicker(
-                            canRemove: false,
-                            onImageSelected: (image) {
-                              if (image == null) return;
-                              Get.find<ProfileCtrl>().changeAvatar(image);
-                            },
-                            child: const Icon(
-                              Icons.camera_alt,
-                              size: 30.0,
-                            ),
-                          )
+                          if (isACurrentAccount) ...[
+                            const SizedBox(width: 10.0),
+                            ImagePicker(
+                              canRemove: false,
+                              onImageSelected: (image) {
+                                if (image == null) return;
+                                Get.find<ProfileCtrl>().changeAvatar(image);
+                              },
+                              child: const Icon(
+                                Icons.camera_alt,
+                                size: 30.0,
+                              ),
+                            )
+                          ]
                         ],
                       ),
                       if (data?['currentVisit'] != null) ...[
