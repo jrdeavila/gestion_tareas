@@ -118,10 +118,21 @@ class SearchCtrl extends GetxController {
 
   void _onSearchCategory(String? value) async {
     _future?.ignore();
+
+    if (value == 'Amigos Compartiendo') {
+      _future = UserAccountService.searchAccountsVisiting(
+        searchText,
+      );
+      var result = await _future!;
+      searchResult.value = result;
+      return;
+    }
+
     _future = UserAccountService.searchAccounts(
       searchText,
       category: value,
     );
+
     var result = await _future!;
     searchResult.value = result;
   }

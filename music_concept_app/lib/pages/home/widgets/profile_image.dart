@@ -58,7 +58,7 @@ class ProfileImage extends StatelessWidget {
                                 url: image!,
                                 fit: BoxFit.cover,
                                 height: avatarSize - 3,
-                                width: avatarSize - 3,
+                                width: double.infinity - 3,
                               ),
                             ),
                           ),

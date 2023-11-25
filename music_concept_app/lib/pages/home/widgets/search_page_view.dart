@@ -133,6 +133,12 @@ class SearchPageView extends StatelessWidget {
                       label: "Personas",
                       onTap: () => ctrl.setSelectedCategory("Personas"),
                     ),
+                    TagFilter(
+                      selected: ctrl.currentCategory == "Amigos Compartiendo",
+                      label: "Amigos Compartiendo",
+                      onTap: () =>
+                          ctrl.setSelectedCategory("Amigos Compartiendo"),
+                    ),
                     ...ctrl.categories.map((element) => TagFilter(
                           selected: ctrl.currentCategory == element,
                           label: element,
@@ -146,15 +152,15 @@ class SearchPageView extends StatelessWidget {
               const SizedBox(
                 width: 16.0,
               ),
-              Text(
-                "Resultados (${ctrl.searchResult.length})",
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16.0,
-                  color: Colors.grey,
-                ),
-                textAlign: TextAlign.center,
-              ),
+              Obx(() => Text(
+                    "Resultados (${ctrl.searchResult.length})",
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16.0,
+                      color: Colors.grey,
+                    ),
+                    textAlign: TextAlign.center,
+                  )),
             ],
           ),
           const SizedBox(

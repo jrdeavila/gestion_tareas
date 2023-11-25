@@ -57,6 +57,20 @@ abstract class UserAccountService {
   }
 
   static Future<List<QueryDocumentSnapshot<Map<String, dynamic>>>>
+      searchAccountsVisiting(String searchText) async {
+    QuerySnapshot<Map<String, dynamic>> results = await FirebaseFirestore
+        .instance
+        .collection("users")
+        .where("currentVisity", isNull: false)
+        .get();
+    var query = results.docs
+        .where((element) => (element["name"] as String).toLowerCase().contains(
+              searchText.toLowerCase(),
+            ));
+    return query.toList();
+  }
+
+  static Future<List<QueryDocumentSnapshot<Map<String, dynamic>>>>
       searchAccounts(
     String searchText, {
     String? category,
