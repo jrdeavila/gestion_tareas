@@ -19,10 +19,6 @@ class SettingsPage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Modo ignconito
-              _incognitoSwitch(),
-              const SizedBox(height: 16),
-
               Text(
                 "Configuración de localización",
                 style: TextStyle(
@@ -37,25 +33,6 @@ class SettingsPage extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  Widget _incognitoSwitch() {
-    final ctrl = Get.find<LocationCtrl>();
-    return Obx(() {
-      return ListTile(
-        selected: ctrl.incognitoMode,
-        leading: const Icon(MdiIcons.incognito),
-        title: const Text('Modo incógnito'),
-        subtitle: const Text(
-            'Utiliza la app sin localización, nadie sabrá a donde estuviste.'),
-        trailing: Switch(
-          value: ctrl.incognitoMode,
-          onChanged: (value) {
-            ctrl.toggleIngcognitoMode();
-          },
-        ),
-      );
-    });
   }
 
   Widget _locationSwitch() {
