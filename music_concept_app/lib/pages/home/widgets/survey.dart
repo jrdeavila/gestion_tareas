@@ -379,11 +379,17 @@ class SurveyProgressInfo extends StatelessWidget {
                         if (hasImage) ...[
                           ClipRRect(
                             borderRadius: BorderRadius.circular(10.0),
-                            child: CachingImage(
-                              url: option['image'],
-                              height: 30,
-                              width: 30,
-                              fit: BoxFit.cover,
+                            child: GestureDetector(
+                              onTap: () {
+                                Get.to(() => ImagePreviewPage(
+                                    imageUrl: option['image']));
+                              },
+                              child: CachingImage(
+                                url: option['image'],
+                                height: 30,
+                                width: 30,
+                                fit: BoxFit.cover,
+                              ),
                             ),
                           ),
                           const SizedBox(width: 10.0),

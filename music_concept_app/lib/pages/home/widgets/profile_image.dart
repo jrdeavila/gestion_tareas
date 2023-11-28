@@ -25,50 +25,84 @@ class ProfileImage extends StatelessWidget {
     final hasImage = image != null;
     final percent = isBusiness ? 4 : 2;
     var avatarWidth = avatarSize * (isBusiness ? 2.0 : 1.0);
-    return SizedBox(
-      height: avatarSize,
-      width: avatarWidth,
-      child: Stack(
-        children: [
-          Positioned.fill(
-            child: ClipPath(
-              clipper: StatusClipper(
-                active: active,
-                radius: 0.1538 * avatarSize,
-                dx: 0.2307 * avatarSize / 2,
-              ),
-              child: Stack(
-                children: [
-                  Positioned.fill(
-                    child: Builder(builder: (context) {
-                      if (hasImage) {
-                        return Container(
-                          height: avatarSize,
-                          width: avatarSize,
-                          decoration: BoxDecoration(
-                            color: Get.theme.colorScheme.onPrimary,
-                            borderRadius:
-                                BorderRadius.circular(avatarSize / percent),
-                          ),
-                          child: Center(
-                            child: ClipRRect(
+    return GestureDetector(
+      onTap: () {
+        if (hasImage) {
+          Get.to(() => ImagePreviewPage(imageUrl: image!));
+        }
+      },
+      child: SizedBox(
+        height: avatarSize,
+        width: avatarWidth,
+        child: Stack(
+          children: [
+            Positioned.fill(
+              child: ClipPath(
+                clipper: StatusClipper(
+                  active: active,
+                  radius: 0.1538 * avatarSize,
+                  dx: 0.2307 * avatarSize / 2,
+                ),
+                child: Stack(
+                  children: [
+                    Positioned.fill(
+                      child: Builder(builder: (context) {
+                        if (hasImage) {
+                          return Container(
+                            height: avatarSize,
+                            width: avatarSize,
+                            decoration: BoxDecoration(
+                              color: Get.theme.colorScheme.onPrimary,
                               borderRadius:
                                   BorderRadius.circular(avatarSize / percent),
-                              child: CachingImage(
-                                url: image!,
-                                fit: BoxFit.cover,
-                                height: avatarSize - 3,
-                                width: double.infinity - 3,
+                            ),
+                            child: Center(
+                              child: ClipRRect(
+                                borderRadius:
+                                    BorderRadius.circular(avatarSize / percent),
+                                child: CachingImage(
+                                  url: image!,
+                                  fit: BoxFit.cover,
+                                  height: avatarSize - 3,
+                                  width: double.infinity - 3,
+                                ),
                               ),
                             ),
-                          ),
-                        );
-                      } else {
-                        return Container(
-                          height: avatarSize,
+                          );
+                        } else {
+                          return Container(
+                            height: avatarSize,
+                            width: avatarWidth,
+                            decoration: BoxDecoration(
+                              color: Colors.grey,
+                              borderRadius:
+                                  BorderRadius.circular(avatarSize / percent),
+                              border: Border.all(
+                                color: Get.theme.colorScheme.onPrimary,
+                                width: 1.0,
+                              ),
+                            ),
+                            child: Center(
+                              child: Text(
+                                name?[0].toUpperCase() ?? '',
+                                style: TextStyle(
+                                  fontSize: fontSize,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          );
+                        }
+                      }),
+                    ),
+                    if (hasVisit) ...[
+                      Align(
+                        alignment: Alignment.center,
+                        child: Container(
                           width: avatarWidth,
+                          height: avatarSize,
                           decoration: BoxDecoration(
-                            color: Colors.grey,
+                            color: Colors.black.withOpacity(0.5),
                             borderRadius:
                                 BorderRadius.circular(avatarSize / percent),
                             border: Border.all(
@@ -76,69 +110,42 @@ class ProfileImage extends StatelessWidget {
                               width: 1.0,
                             ),
                           ),
-                          child: Center(
-                            child: Text(
-                              name?[0].toUpperCase() ?? '',
-                              style: TextStyle(
-                                fontSize: fontSize,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        );
-                      }
-                    }),
-                  ),
-                  if (hasVisit) ...[
-                    Align(
-                      alignment: Alignment.center,
-                      child: Container(
-                        width: avatarWidth,
-                        height: avatarSize,
-                        decoration: BoxDecoration(
-                          color: Colors.black.withOpacity(0.5),
-                          borderRadius:
-                              BorderRadius.circular(avatarSize / percent),
-                          border: Border.all(
-                            color: Get.theme.colorScheme.onPrimary,
-                            width: 1.0,
+                        ),
+                      ),
+                      Align(
+                        alignment: Alignment.center,
+                        child: SizedBox(
+                          width: avatarWidth,
+                          height: avatarSize,
+                          child: MusicVisualizerAnimation(
+                            lines: isBusiness ? 12 : 6,
                           ),
                         ),
                       ),
-                    ),
-                    Align(
-                      alignment: Alignment.center,
-                      child: SizedBox(
-                        width: avatarWidth,
-                        height: avatarSize,
-                        child: MusicVisualizerAnimation(
-                          lines: isBusiness ? 12 : 6,
-                        ),
-                      ),
-                    ),
+                    ],
                   ],
-                ],
-              ),
-            ),
-          ),
-          if (active)
-            Positioned(
-              height: 0.2307 * avatarSize,
-              width: 0.2307 * avatarSize,
-              bottom: 0.0,
-              right: 0,
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  color: Colors.green,
-                  border: Border.all(
-                    color: Get.theme.colorScheme.onPrimary,
-                    width: 1.0,
-                  ),
-                  shape: BoxShape.circle,
                 ),
               ),
             ),
-        ],
+            if (active)
+              Positioned(
+                height: 0.2307 * avatarSize,
+                width: 0.2307 * avatarSize,
+                bottom: 0.0,
+                right: 0,
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    color: Colors.green,
+                    border: Border.all(
+                      color: Get.theme.colorScheme.onPrimary,
+                      width: 1.0,
+                    ),
+                    shape: BoxShape.circle,
+                  ),
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }

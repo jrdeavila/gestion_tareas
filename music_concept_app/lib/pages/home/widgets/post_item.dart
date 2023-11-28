@@ -219,16 +219,24 @@ class _PostItemState extends State<PostItem> {
   }
 
   ClipRRect _buildImage(Map<String, dynamic> post) {
+    var url = post['image'];
     return ClipRRect(
       borderRadius: const BorderRadius.only(
         topLeft: Radius.circular(20.0),
         topRight: Radius.circular(20.0),
       ),
-      child: CachingImage(
-        url: post['image'],
-        height: 200,
-        fit: BoxFit.cover,
-        width: double.infinity,
+      child: GestureDetector(
+        onTap: () {
+          if (url != null) {
+            Get.to(() => ImagePreviewPage(imageUrl: url));
+          }
+        },
+        child: CachingImage(
+          url: url,
+          height: 200,
+          fit: BoxFit.cover,
+          width: double.infinity,
+        ),
       ),
     );
   }
@@ -323,9 +331,10 @@ class _PostItemState extends State<PostItem> {
                             (index) {
                           final option = snapshot.data!.docs[index];
                           return RadioSurveyItem(
-                              surveyRef: widget.snapshot.id,
-                              snapshot: option,
-                              maxVotes: snapshotTop.data ?? 0);
+                            surveyRef: widget.snapshot.id,
+                            snapshot: option,
+                            maxVotes: snapshotTop.data ?? 0,
+                          );
                         }),
                       ],
                     ],
