@@ -314,7 +314,8 @@ class _ProfileViewState extends State<ProfileView> {
                           ]
                         ],
                       ),
-                      if (data?['currentVisit'] != null) ...[
+                      if (!cantViewBusinessStatus &&
+                          data?['currentVisit'] != null) ...[
                         const SizedBox(
                           height: 10.0,
                         ),

@@ -61,7 +61,7 @@ abstract class UserAccountService {
     QuerySnapshot<Map<String, dynamic>> results = await FirebaseFirestore
         .instance
         .collection("users")
-        .where("currentVisity", isNull: false)
+        .where("currentVisit", isNull: false)
         .get();
     var query = results.docs
         .where((element) => (element["name"] as String).toLowerCase().contains(
