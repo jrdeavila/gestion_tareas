@@ -40,6 +40,11 @@ SettingsPrivacyView privacyFromValue(String? value) {
 }
 
 abstract class UserAccountService {
+  static Future<String> getAccountName(String accountRef) async {
+    final doc = await FirebaseFirestore.instance.doc(accountRef).get();
+    return doc.data()!["name"] as String;
+  }
+
   static Future<void> changeProfileAvatarVisibility({
     required String accountRef,
     required SettingsPrivacyView value,

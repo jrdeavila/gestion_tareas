@@ -17,6 +17,9 @@ class ReedView extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         child:
             CustomScrollView(physics: const BouncingScrollPhysics(), slivers: [
+          const SliverToBoxAdapter(
+            child: BusinessConnection(),
+          ),
           posts.isEmpty && isLoading
               ? SliverList(
                   delegate: SliverChildListDelegate([
@@ -67,5 +70,59 @@ class ReedView extends StatelessWidget {
         ]),
       );
     });
+  }
+}
+
+class BusinessConnection extends GetView<UserCtrl> {
+  const BusinessConnection({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder(
+        stream: controller.user?.snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.data?['currentVisit'] == null) {
+            return const SizedBox.shrink();
+          }
+          return GestureDetector(
+            onTap: () {
+              Get.toNamed("");
+            },
+            child: Container(
+              padding: const EdgeInsets.all(16.0),
+              margin: const EdgeInsets.only(bottom: 16.0),
+              decoration: BoxDecoration(
+                color: Get.theme.colorScheme.primary,
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              child: FutureBuilder(
+                  future: UserAccountService.getAccountName(
+                      snapshot.data!['currentVisit']),
+                  builder: (context, snapshot) {
+                    return const Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Estas compartiendo en Nombre del establecimiento",
+                          style: TextStyle(
+                            fontSize: 18.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
+                          "¿Desea interactuar con nosotros?",
+                          style: TextStyle(
+                            fontSize: 14.0,
+                          ),
+                        ),
+                      ],
+                    );
+                  }),
+            ),
+          );
+        });
   }
 }
