@@ -28,6 +28,8 @@ abstract class AppRoutes {
   static const String profileDetails = '/profile-details';
   static const String settingsPrivacy = '/settings-privacy';
 
+  static const String historyCamera = "/camera";
+
   static const String initialRoute = root;
   static final Map<String, Widget Function(BuildContext context)> routes = {
     root: (context) => const WelcomePage(),
@@ -49,5 +51,6 @@ abstract class AppRoutes {
     followers: (context) => FollowersPage(guest: Get.arguments),
     profileDetails: (context) => ProfileDetailsPage(guest: Get.arguments),
     settingsPrivacy: (context) => const SettingsPrivacyPage(),
+    historyCamera: (context) => const HistoryCameraView(),
   };
 }

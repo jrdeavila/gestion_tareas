@@ -10,7 +10,8 @@ environment:
 dependencies:
   async: ^2.11.0
   audioplayers: ^5.1.0
-  cached_network_image: ^3.2.3
+  cached_network_image: ^3.3.1
+  camera: ^0.10.5+9
   cloud_firestore: ^4.8.4
   cupertino_icons: ^1.0.2
   dio: ^5.3.2
