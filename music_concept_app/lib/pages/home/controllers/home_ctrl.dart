@@ -27,6 +27,7 @@ class HomeCtrl extends GetxController {
     Get.put(SearchCtrl());
     Get.put(ProfileCtrl(app));
     Get.put(ChatCtrl(app));
+    Get.put(HistoryCtrl(app));
   }
 
   @override

@@ -11,6 +11,7 @@ abstract class ColorPalete {
     scaffoldBackgroundColor: const Color(backgroundColor),
     colorScheme: colorScheme,
     appBarTheme: appBarTheme,
+    useMaterial3: false,
   );
 
   // Configuracion de paleta de colores

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:camera/camera.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +18,9 @@ void main() async {
       WidgetsFlutterBinding.ensureInitialized();
 
       await GetStorage.init();
+      final cameras = await availableCameras();
+
+      Get.put(cameras);
 
       initializeDateFormatting('es');
       timeago.setLocaleMessages('es', timeago.EsMessages());

@@ -84,6 +84,17 @@ abstract class FollowingFollowersServices {
         );
   }
 
+  static Future<List<String>> getFollowingsFuture(
+      {required String accountRef}) {
+    return FirebaseFirestore.instance
+        .collection("follows")
+        .where("followerRef", isEqualTo: accountRef)
+        .get()
+        .then(((event) => event.docs
+            .map((e) => e.data()['followingRef'] as String)
+            .toList()));
+  }
+
   static Stream<List<String>> getFollowings({required String accountRef}) {
     return FirebaseFirestore.instance
         .collection("follows")
