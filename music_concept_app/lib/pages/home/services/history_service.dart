@@ -75,11 +75,14 @@ class HistoryService {
             : null;
         final historyModel = History.fromJson(history.data());
         historyModel.userCreator = userCreator;
-        if (userCreator != null) {
-          if (histories[userCreator] != null) {
-            histories[userCreator]!.add(historyModel);
-          } else {
-            histories[userCreator] = [historyModel];
+        if (historyModel.createdAt
+            .isAfter(DateTime.now().subtract(const Duration(days: 1)))) {
+          if (userCreator != null) {
+            if (histories[userCreator] != null) {
+              histories[userCreator]!.add(historyModel);
+            } else {
+              histories[userCreator] = [historyModel];
+            }
           }
         }
       }
