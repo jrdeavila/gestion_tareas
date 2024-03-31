@@ -29,6 +29,7 @@ abstract class AppRoutes {
   static const String settingsPrivacy = '/settings-privacy';
 
   static const String historyCamera = "/camera";
+  static const String historyCreate = "/history-create";
 
   static const String initialRoute = root;
   static final Map<String, Widget Function(BuildContext context)> routes = {
@@ -52,5 +53,6 @@ abstract class AppRoutes {
     profileDetails: (context) => ProfileDetailsPage(guest: Get.arguments),
     settingsPrivacy: (context) => const SettingsPrivacyPage(),
     historyCamera: (context) => const HistoryCameraView(),
+    historyCreate: (context) => HistoryCreatePage(image: Get.arguments),
   };
 }

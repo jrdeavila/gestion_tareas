@@ -5,4 +5,8 @@ abstract class TimeUtils {
     if (time == null) return "Nunca";
     return timeago.format(time, locale: 'es');
   }
+
+  static String generateDateId() {
+    return DateTime.now().millisecondsSinceEpoch.toString();
+  }
 }

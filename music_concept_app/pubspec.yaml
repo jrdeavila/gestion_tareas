@@ -15,6 +15,7 @@ dependencies:
   cloud_firestore: ^4.8.4
   cupertino_icons: ^1.0.2
   dio: ^5.3.2
+  equatable: ^2.0.5
   firebase_app_check: ^0.1.5+2
   firebase_auth: ^4.7.2
   firebase_core: ^2.15.0

@@ -28,6 +28,8 @@ class HomeCtrl extends GetxController {
     Get.put(ProfileCtrl(app));
     Get.put(ChatCtrl(app));
     Get.put(HistoryCtrl(app));
+    Get.put(HistoryCameraCtrl());
+    Get.put(CreateHistoryCtrl(app));
   }
 
   @override
@@ -75,6 +77,10 @@ class HomeCtrl extends GetxController {
   void goToSearch() {
     _currentPage.value = 0;
     Get.find<FanPageCtrl>().showReed();
+  }
+
+  Future<void> refreshData() async {
+    await Get.find<HistoryCtrl>().refreshData();
   }
 }
 
