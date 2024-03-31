@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-import 'package:async/async.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:music_concept_app/lib.dart';
@@ -95,45 +94,29 @@ abstract class PostService {
     });
   }
 
-  static Stream<List<FdSnapshot>> getAccountFollowingPost(String accountRef) {
-    Stream<List<FdSnapshot>> fetchPostStream() => FirebaseFirestore.instance
-        .collection("posts")
-        .snapshots()
-        .map((event) => event.docs);
-    Stream<List<FdSnapshot>> fetchFollowingPostStream() =>
-        FirebaseFirestore.instance
+  static Future<List<FdSnapshot>> getAccountFollowingPostFuture(
+      String accountRef) async {
+    final followingRefs = (await FirebaseFirestore.instance
             .collection("follows")
             .where("followerRef", isEqualTo: accountRef)
-            .snapshots()
-            .asyncMap((event) {
-          return FirebaseFirestore.instance
-              .collection("posts")
-              .get()
-              .then((value) => value.docs);
-        });
+            .get())
+        .docs
+        .map((e) => e['followingRef'])
+        .toList()
+        .cast<String>();
 
-    return StreamGroup.merge<List<FdSnapshot>>([
-      fetchPostStream(),
-      fetchFollowingPostStream(),
-    ]).asyncMap((event) async {
-      final followingRefs = (await FirebaseFirestore.instance
-              .collection("follows")
-              .where("followerRef", isEqualTo: accountRef)
-              .get())
-          .docs
-          .map((e) => e['followingRef'])
-          .toList()
-          .cast<String>();
-      final docs = <FdSnapshot>[];
-      for (final ref in followingRefs) {
-        docs.addAll(event.where((element) =>
-            element['accountRef'] == ref &&
-            element['deletedAt'] == null &&
-            element['visibility'] != PostVisibility.private.index));
-      }
-      docs.sort((a, b) => b['createdAt'].compareTo(a['createdAt']));
-      return docs;
-    });
+    final docs = <FdSnapshot>[];
+
+    for (final ref in followingRefs) {
+      final data = await FirebaseFirestore.instance
+          .collection("posts")
+          .where("accountRef", isEqualTo: ref)
+          .where("deletedAt", isNull: true)
+          .get();
+      docs.addAll(data.docs);
+    }
+
+    return docs;
   }
 }
 

@@ -74,17 +74,8 @@ class PostCtrl extends GetxController {
   @override
   void onReady() {
     super.onReady();
-    _posts.bindStream(_fetchingPost);
+    _fetchPost();
   }
-
-  Stream<List<FdSnapshot>> get _fetchingPost =>
-      PostService.getAccountFollowingPost("users/${_authApp.currentUser?.uid}")
-          .asyncMap((event) async {
-        _isLoading.value = true;
-        await Future.delayed(1.seconds);
-        _isLoading.value = false;
-        return event;
-      });
 
   Stream<DocumentSnapshot<Map<String, dynamic>>> getAccountRef(
       String accountRef) {
@@ -111,6 +102,12 @@ class PostCtrl extends GetxController {
       surveyRef: surveyRef,
       optionRef: optionRef,
       accountRef: "users/${_authApp.currentUser?.uid}",
+    );
+  }
+
+  Future<void> _fetchPost() async {
+    _posts.value = await PostService.getAccountFollowingPostFuture(
+      "users/${_authApp.currentUser?.uid}",
     );
   }
 
@@ -196,6 +193,10 @@ class PostCtrl extends GetxController {
       accountRef: _authApp.currentUser!.uid,
       likeableRef: postRef,
     );
+  }
+
+  Future<void> refreshData() async {
+    _fetchPost();
   }
 }
 

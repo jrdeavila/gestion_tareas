@@ -81,6 +81,7 @@ class HomeCtrl extends GetxController {
 
   Future<void> refreshData() async {
     await Get.find<HistoryCtrl>().refreshData();
+    await Get.find<PostCtrl>().refreshData();
   }
 }
 
