@@ -1,10 +1,47 @@
 {
   "project_info": {
     "project_number": "1043268276959",
+    "firebase_url": "https://music-concept-app-default-rtdb.firebaseio.com",
     "project_id": "music-concept-app",
     "storage_bucket": "music-concept-app.appspot.com"
   },
   "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1043268276959:android:e42dc479d0f318503c4f6a",
+        "android_client_info": {
+          "package_name": "com.beatconnect.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1043268276959-nveiof1aqpnqkpj2it7j1c37b46vnl5i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDgNIDi_tiAeVwFNkbH-X9lkFogEb74cGs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1043268276959-nveiof1aqpnqkpj2it7j1c37b46vnl5i.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1043268276959-upm92ui2h6uevgplv2t6241bhlo0g8l4.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.musicConceptApp"
+              }
+            }
+          ]
+        }
+      }
+    },
     {
       "client_info": {
         "mobilesdk_app_id": "1:1043268276959:android:364ca16beb96fe733c4f6a",
@@ -29,6 +66,13 @@
             {
               "client_id": "1043268276959-nveiof1aqpnqkpj2it7j1c37b46vnl5i.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "1043268276959-upm92ui2h6uevgplv2t6241bhlo0g8l4.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.musicConceptApp"
+              }
             }
           ]
         }
