@@ -57,12 +57,13 @@ class HistoryService {
   static Future<Map<UserCreator, List<History>>> getHistoriesFromFollowingUsers(
       String userRef) async {
     final followingUsers = await FollowingFollowersServices.getFollowingsFuture(
-        accountRef: userRef);
+        accountRef: "users/$userRef");
     final histories = <UserCreator, List<History>>{};
     for (final followingUser in followingUsers) {
+      final ref = followingUser.replaceFirst("users/", "");
       final userHistories = await FirebaseFirestore.instance
           .collection("histories")
-          .where("userCreatorId", isEqualTo: followingUser)
+          .where("userCreatorId", isEqualTo: ref)
           .get();
       for (final history in userHistories.docs) {
         final userCreatorDoc = await FirebaseFirestore.instance

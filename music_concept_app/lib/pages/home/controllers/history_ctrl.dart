@@ -180,13 +180,17 @@ class HistoryCtrl extends GetxController {
   Future<void> _fetchHistories() async {
     final userId = FirebaseAuth.instanceFor(app: _app).currentUser!.uid;
     try {
-      final histories =
-          await HistoryService.getHistoriesFromFollowingUsers(userId);
-      _histories.assignAll(histories);
       final myHistories = await HistoryService.getMyHistory(userId);
       if (myHistories.isNotEmpty && myHistories.first.userCreator != null) {
         _histories[myHistories.first.userCreator!] = myHistories;
       }
+      final histories =
+          await HistoryService.getHistoriesFromFollowingUsers(userId);
+      _histories.assignAll({
+        ..._histories,
+        ...histories,
+      });
+
       _histories.refresh();
     } catch (e) {
       print(e);

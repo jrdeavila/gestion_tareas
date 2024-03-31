@@ -61,16 +61,18 @@ class _ShowHistoryState extends State<ShowHistory> {
               _buildButtons(
                 histories: histories,
               ),
-            Positioned(
-              top: 20.0 + kToolbarHeight,
-              right: 20.0,
-              child: HomeAppBarAction(
-                icon: Icons.more_vert,
-                onTap: () {
-                  Get.find<HistoryCtrl>().showOptions(histories[_currentIndex]);
-                },
+            if (histories.first.isMine)
+              Positioned(
+                top: 20.0 + kToolbarHeight,
+                right: 20.0,
+                child: HomeAppBarAction(
+                  icon: Icons.more_vert,
+                  onTap: () {
+                    Get.find<HistoryCtrl>()
+                        .showOptions(histories[_currentIndex]);
+                  },
+                ),
               ),
-            ),
           ],
         ),
       );
@@ -127,7 +129,9 @@ class _ShowHistoryState extends State<ShowHistory> {
                     ),
                     const SizedBox(width: 10.0),
                     Text(
-                      histories.first.userCreator!.name,
+                      histories.first.isMine
+                          ? "Tu"
+                          : histories.first.userCreator!.name,
                       style: const TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
