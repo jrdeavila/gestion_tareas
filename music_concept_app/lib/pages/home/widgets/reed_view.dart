@@ -218,13 +218,11 @@ class BusinessConnection extends GetView<UserCtrl> {
     return StreamBuilder(
         stream: controller.user?.snapshots(),
         builder: (context, snapshot) {
-          if (snapshot.data?['currentVisit'] == null) {
+          if (snapshot.data?.data()?['currentVisit'] == null) {
             return const SizedBox.shrink();
           }
           return GestureDetector(
-            onTap: () {
-              Get.toNamed("");
-            },
+            onTap: () {},
             child: Container(
               padding: const EdgeInsets.all(16.0),
               margin: const EdgeInsets.only(bottom: 16.0),

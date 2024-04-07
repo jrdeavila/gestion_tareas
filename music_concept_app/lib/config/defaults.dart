@@ -11,6 +11,6 @@ abstract class AppDefaults {
   static const mapStyles = """ """;
 
   static const firebaseAuthInstances = [
-    '[SECONDARY]',
+    // '[SECONDARY]',
   ];
 }

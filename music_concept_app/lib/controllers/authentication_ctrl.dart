@@ -107,4 +107,21 @@ class AuthenticationCtrl extends GetxController {
         .signOut()
         .then((value) => _validateOtherApps());
   }
+
+  void deleteAccount() async {
+    try {
+      await FirebaseAuth.instanceFor(app: _app)
+          .currentUser!
+          .delete()
+          .then((value) => _validateOtherApps());
+    } catch (e) {
+      SnackbarUtils.showSnackbar(
+        message: "Inicie sesión nuevamente para eliminar la cuenta",
+        label: "Cesar sesión",
+        onPressed: () {
+          logout();
+        },
+      );
+    }
+  }
 }

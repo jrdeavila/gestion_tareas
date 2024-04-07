@@ -66,7 +66,7 @@ class PostCtrl extends GetxController {
   FirebaseAuth get _authApp => FirebaseAuth.instanceFor(app: _app);
 
   final RxList<FdSnapshot> _posts = <FdSnapshot>[].obs;
-  final RxBool _isLoading = true.obs;
+  final RxBool _isLoading = false.obs;
 
   List<FdSnapshot> get posts => _posts.toList();
   bool get isLoading => _isLoading.value;
@@ -106,9 +106,11 @@ class PostCtrl extends GetxController {
   }
 
   Future<void> _fetchPost() async {
+    _isLoading.value = true;
     _posts.value = await PostService.getAccountFollowingPostFuture(
       "users/${_authApp.currentUser?.uid}",
     );
+    _isLoading.value = false;
   }
 
   Stream<bool> accountLikedPost({

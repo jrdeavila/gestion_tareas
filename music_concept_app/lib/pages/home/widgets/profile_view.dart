@@ -78,6 +78,15 @@ class _ProfileViewState extends State<ProfileView> {
                       },
                     ),
                     actions: [
+                      if (widget.guest == null)
+                        HomeAppBarAction(
+                          selected: true,
+                          icon: MdiIcons.spotify,
+                          light: true,
+                          onTap: () {
+                            Get.find<SpotifyCtrl>().login();
+                          },
+                        ),
                       const SizedBox(width: 10.0),
                       if (widget.guest == null)
                         HomeAppBarAction(

@@ -21,6 +21,7 @@ class RegisterBussinessCtrl extends GetxController {
   @override
   void onReady() {
     super.onReady();
+    _location.value = Get.find<LocationCtrl>().position?.toLatLng();
     categories.bindStream(AppConfigService.bussinessCategories);
   }
 

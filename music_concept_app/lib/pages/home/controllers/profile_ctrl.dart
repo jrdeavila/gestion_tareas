@@ -184,6 +184,29 @@ class ProfileCtrl extends GetxController {
     if (path == null) return true;
     return "users/${_authApp.currentUser!.uid}" == path;
   }
+
+  void deleteAccount() {
+    Get.dialog(
+      AlertDialog(
+        title: Text("Eliminar cuenta"),
+        content: Text("¿Estás seguro de que deseas eliminar tu cuenta?"),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Get.back();
+            },
+            child: Text("Cancelar"),
+          ),
+          TextButton(
+            onPressed: () {
+              Get.find<AuthenticationCtrl>().deleteAccount();
+            },
+            child: Text("Eliminar"),
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 final accountOptions = {
@@ -208,6 +231,14 @@ final accountOptions = {
     "icon": MdiIcons.accountCog,
     "onTap": (TapUpDetails details, BuildContext context) {
       Get.toNamed(AppRoutes.settingsPrivacy);
+      return;
+    },
+  },
+  "delete-account": {
+    "label": "Eliminar cuenta",
+    "icon": MdiIcons.delete,
+    "onTap": (TapUpDetails details, BuildContext context) {
+      Get.find<ProfileCtrl>().deleteAccount();
       return;
     },
   },

@@ -14,9 +14,14 @@ class UserCtrl extends GetxController {
     super.onReady();
     FirebaseAuth.instanceFor(app: Get.find<FirebaseCtrl>().defaultApp)
         .userChanges()
-        .listen((user) {
-      _user.value =
-          user != null ? UserAccountService.getUserAccountRef(user.uid) : null;
+        .listen((user) async {
+      final ref = UserAccountService.getUserAccountRef(user?.uid);
+      final snapshot = await ref.get();
+      if (snapshot.exists) {
+        _user.value = ref;
+      } else {
+        _user.value = null;
+      }
     });
   }
 
