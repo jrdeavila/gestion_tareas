@@ -114,17 +114,17 @@ class _ProfileViewState extends State<ProfileView> {
                   SliverToBoxAdapter(
                     child: ProfileTabBar(
                       children: [
-                        if (widget.guest == null)
-                          ProfileTabBarItem(
-                            label: 'Tu música',
-                            icon: MdiIcons.music,
-                            selected: _currentTab == 0,
-                            onTap: () {
-                              setState(() {
-                                _currentTab = 0;
-                              });
-                            },
-                          ),
+                        ProfileTabBarItem(
+                          label:
+                              widget.guest != null ? "Sus gustos" : 'Tu música',
+                          icon: MdiIcons.music,
+                          selected: _currentTab == 0,
+                          onTap: () {
+                            setState(() {
+                              _currentTab = 0;
+                            });
+                          },
+                        ),
                         ProfileTabBarItem(
                             label: 'Posts',
                             icon: MdiIcons.post,
@@ -146,9 +146,11 @@ class _ProfileViewState extends State<ProfileView> {
                       ],
                     ),
                   ),
-                  if (_currentTab == 0 && widget.guest == null)
-                    const SliverFillRemaining(
-                      child: YourMusicTabView(),
+                  if (_currentTab == 0)
+                    SliverFillRemaining(
+                      child: YourMusicTabView(
+                        accountRef: Get.find<UserCtrl>().user?.id,
+                      ),
                     ),
                   if (_currentTab == 1 &&
                           snapshot.connectionState == ConnectionState.waiting ||

@@ -3,7 +3,8 @@ import 'package:get/get.dart';
 import 'package:music_concept_app/lib.dart';
 
 class YourMusicTabView extends StatelessWidget {
-  const YourMusicTabView({super.key});
+  final String? accountRef;
+  const YourMusicTabView({super.key, required this.accountRef});
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +25,8 @@ class YourMusicTabView extends StatelessWidget {
           const SizedBox(height: 20.0),
           Expanded(
             child: FutureBuilder(
-                future: Get.find<SpotifyCtrl>().getRecentlyPlayedTracks(),
+                future:
+                    Get.find<SpotifyCtrl>().getRecentlyPlayedTracks(accountRef),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return ListView(
@@ -37,7 +39,9 @@ class YourMusicTabView extends StatelessWidget {
                   }
                   if (snapshot.connectionState == ConnectionState.done &&
                       (snapshot.data?.isEmpty ?? false)) {
-                    return const SizedBox.shrink();
+                    return const Center(
+                      child: Text("No hay canciones recientes"),
+                    );
                   }
                   return ListView.builder(
                     physics: const NeverScrollableScrollPhysics(),

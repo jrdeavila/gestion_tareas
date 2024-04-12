@@ -31,11 +31,17 @@ class SpotifyCtrl extends GetxController {
       "spotify_token": token.accessToken,
       "spotify_refresh_token": token.refreshToken,
     });
+
+    final tracks = await SpotifyService.getUserTracks(ref.path);
+    await SpotifyService.saveTracksInUser(
+      userRef: ref.path,
+      tracks: tracks,
+    );
   }
 
-  Future<List<SpotifyTrack>> getRecentlyPlayedTracks() {
+  Future<List<SpotifyTrack>> getRecentlyPlayedTracks([String? accountRef]) {
     final user = FirebaseAuth.instanceFor(app: _app).currentUser;
-    final ref = UserAccountService.getUserAccountRef(user?.uid);
+    final ref = UserAccountService.getUserAccountRef(accountRef ?? user?.uid);
     return SpotifyService.getUserTracks(ref.path).onError((error, stackTrace) {
       return [];
     }).then((value) => value);
