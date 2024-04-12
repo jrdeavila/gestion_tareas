@@ -26,3 +26,4 @@ export 'survey.dart';
 export 'tabbar.dart';
 export 'user_app_bar_action.dart';
 export 'wallpaper_tab.dart';
+export 'your_music_tab_view.dart';

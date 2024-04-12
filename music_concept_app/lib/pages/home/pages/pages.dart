@@ -1,3 +1,4 @@
+export 'background_config_page.dart';
 export 'camera_page.dart';
 export 'chat_page.dart';
 export 'create_survey_page.dart';

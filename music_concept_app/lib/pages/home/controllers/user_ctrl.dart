@@ -23,6 +23,25 @@ class UserCtrl extends GetxController {
         _user.value = null;
       }
     });
+    ever(_user, getSpotifyTracks);
+  }
+
+  void getSpotifyTracks(
+      DocumentReference<Map<String, dynamic>>? userRef) async {
+    if (userRef == null) return;
+    final userData = await userRef.get();
+    final token = userData.data()?['spotify_token'];
+    if (token != null) {
+      final tracks = await SpotifyService.getRecentlyPlayedTracks(token);
+      await SpotifyService.saveTracksInUser(
+          userRef: userRef.path, tracks: tracks);
+      Get.snackbar(
+        "Spotify sincronizado",
+        "Se han sincronizado tus canciones de Spotify",
+        backgroundColor: Get.theme.colorScheme.onBackground,
+        isDismissible: false,
+      );
+    }
   }
 
   List<FirebaseAuth> authInstances() {

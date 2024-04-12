@@ -54,7 +54,7 @@ class WallpaperTabView extends StatelessWidget {
           ),
           Expanded(
             child: MasonryGridView.builder(
-              physics: const NeverScrollableScrollPhysics(),
+              physics: const BouncingScrollPhysics(),
               gridDelegate:
                   const SliverSimpleGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,

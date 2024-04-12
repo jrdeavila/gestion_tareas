@@ -7,9 +7,9 @@ import 'package:get/get.dart';
 import 'package:music_concept_app/lib.dart';
 
 class HistoryCameraCtrl extends GetxController {
-  final RxBool _loadingCamera = false.obs;
-  final Rx<CameraController> _cameraController = Rx(CameraController(
-      Get.find<List<CameraDescription>>()[0], ResolutionPreset.max));
+  final RxBool _loadingCamera = true.obs;
+  final Rx<List<CameraDescription>> _cameras = Rx([]);
+  late final Rx<CameraController> _cameraController;
   final RxBool _flashOn = false.obs;
   final Rx<Uint8List?> _image = Rx(null);
 
@@ -29,6 +29,14 @@ class HistoryCameraCtrl extends GetxController {
     initializeCamera();
   }
 
+  @override
+  void dispose() {
+    _image.value = null;
+    _cameras.value = [];
+    _cameraController.value.dispose();
+    super.dispose();
+  }
+
   // ====================================================
 
   void takePicture() async {
@@ -41,9 +49,15 @@ class HistoryCameraCtrl extends GetxController {
 
   Future<void> initializeCamera() async {
     _loadingCamera.value = true;
+
+    final cameras = await availableCameras();
+    _cameras.value = cameras;
+
+    _cameraController = Rx(CameraController(cameras[0], ResolutionPreset.max));
+
     await _cameraController.value.dispose();
-    _cameraController.value = CameraController(
-        Get.find<List<CameraDescription>>()[0], ResolutionPreset.medium);
+    _cameraController.value =
+        CameraController(cameras[0], ResolutionPreset.medium);
     await Future.delayed(const Duration(seconds: 1));
     _cameraController.value.initialize().then((value) {
       _loadingCamera.value = false;
@@ -61,9 +75,9 @@ class HistoryCameraCtrl extends GetxController {
     final lensDirection = cameraController.description.lensDirection;
     late CameraDescription newDescription;
     if (lensDirection == CameraLensDirection.front) {
-      newDescription = Get.find<List<CameraDescription>>()[0];
+      newDescription = _cameras.value[0];
     } else {
-      newDescription = Get.find<List<CameraDescription>>()[1];
+      newDescription = _cameras.value[1];
     }
 
     await cameraController.dispose();

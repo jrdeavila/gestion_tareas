@@ -3,11 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:music_concept_app/lib.dart';
 
-class HistoryCameraView extends GetView<HistoryCameraCtrl> {
+class HistoryCameraView extends StatelessWidget {
   const HistoryCameraView({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.put(HistoryCameraCtrl());
     return Obx(() {
       if (controller.loadingCamera) {
         return const Center(
@@ -33,6 +34,7 @@ class HistoryCameraView extends GetView<HistoryCameraCtrl> {
   }
 
   Scaffold _buildImageView() {
+    final controller = Get.find<HistoryCameraCtrl>();
     return Scaffold(
       body: Stack(
         children: [
@@ -71,6 +73,7 @@ class HistoryCameraView extends GetView<HistoryCameraCtrl> {
   }
 
   Scaffold _buildCameraView() {
+    final controller = Get.find<HistoryCameraCtrl>();
     final cameraController = controller.cameraController;
     return Scaffold(
       body: Center(

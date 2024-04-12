@@ -127,6 +127,13 @@ class ProfileCtrl extends GetxController {
 
   void selectWallpaper(String? wallpaper) {
     _selectedWallpaper.value = wallpaper;
+    Get.snackbar(
+      "Fondo seleccionado",
+      "El fondo de pantalla ha sido seleccionado",
+      snackPosition: SnackPosition.BOTTOM,
+      backgroundColor: Get.theme.colorScheme.onBackground,
+      isDismissible: true,
+    );
   }
 
   void _loadWallpapers() async {
@@ -215,6 +222,14 @@ final accountOptions = {
     "icon": MdiIcons.account,
     "onTap": (TapUpDetails details, BuildContext context) {
       Get.toNamed(AppRoutes.profileDetails);
+      return;
+    },
+  },
+  "background-config": {
+    "label": "Configuración de fondo",
+    "icon": MdiIcons.imageFilterCenterFocus,
+    "onTap": (TapUpDetails details, BuildContext context) {
+      Get.toNamed(AppRoutes.backgroundConfig);
       return;
     },
   },

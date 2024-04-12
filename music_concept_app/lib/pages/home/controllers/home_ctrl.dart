@@ -28,9 +28,8 @@ class HomeCtrl extends GetxController {
     Get.put(ProfileCtrl(app));
     Get.put(ChatCtrl(app));
     Get.put(HistoryCtrl(app));
-    Get.put(HistoryCameraCtrl());
     Get.put(CreateHistoryCtrl(app));
-    Get.put(SpotifyCtrl());
+    Get.put(SpotifyCtrl(app));
   }
 
   @override
@@ -44,7 +43,6 @@ class HomeCtrl extends GetxController {
     Get.delete<EventCtrl>();
     Get.delete<PostCtrl>();
     Get.delete<HistoryCtrl>();
-    Get.delete<HistoryCameraCtrl>();
     Get.delete<CreateHistoryCtrl>();
     Get.delete<SpotifyCtrl>();
   }

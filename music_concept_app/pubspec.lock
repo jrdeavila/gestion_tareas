@@ -595,16 +595,8 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_web_auth:
-    dependency: "direct main"
-    description:
-      name: flutter_web_auth
-      sha256: a69fa8f43b9e4d86ac72176bf747b735e7b977dd7cf215076d95b87cb05affdd
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.5.0"
   flutter_web_auth_2:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: flutter_web_auth_2
       sha256: "0da41e631a368e02366fc1a9b79dd8da191e700a836878bc54466fff51c07df2"

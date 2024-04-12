@@ -72,21 +72,8 @@ class BusinessItem extends StatelessWidget {
   }
 }
 
-class BusinessItemSkeleton extends StatefulWidget {
+class BusinessItemSkeleton extends StatelessWidget {
   const BusinessItemSkeleton({super.key});
-
-  @override
-  State<BusinessItemSkeleton> createState() => _BusinessItemSkeletonState();
-}
-
-class _BusinessItemSkeletonState extends State<BusinessItemSkeleton>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _animationController;
-  @override
-  void initState() {
-    super.initState();
-    _animationController = AnimationController(vsync: this);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -102,11 +89,11 @@ class _BusinessItemSkeletonState extends State<BusinessItemSkeleton>
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          SkeletonBox(
+          const SkeletonBox(
             width: 60.0,
             height: 60.0,
             shape: BoxShape.circle,
-            value: _animationController.value,
+            value: 1,
           ),
           const SizedBox(
             height: 10.0,
@@ -114,7 +101,7 @@ class _BusinessItemSkeletonState extends State<BusinessItemSkeleton>
           SkeletonBox(
             width: 80,
             height: 10,
-            value: _animationController.value,
+            value: 1,
             borderRadius: BorderRadius.circular(5.0),
           ),
           const SizedBox(
@@ -123,7 +110,7 @@ class _BusinessItemSkeletonState extends State<BusinessItemSkeleton>
           SkeletonBox(
             width: 50,
             height: 8.0,
-            value: _animationController.value,
+            value: 1,
             borderRadius: BorderRadius.circular(5.0),
           )
         ],

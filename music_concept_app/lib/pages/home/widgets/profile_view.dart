@@ -78,7 +78,8 @@ class _ProfileViewState extends State<ProfileView> {
                       },
                     ),
                     actions: [
-                      if (widget.guest == null)
+                      if (widget.guest == null &&
+                          !Get.find<SpotifyCtrl>().isLogged)
                         HomeAppBarAction(
                           selected: true,
                           icon: MdiIcons.spotify,
@@ -115,8 +116,8 @@ class _ProfileViewState extends State<ProfileView> {
                       children: [
                         if (widget.guest == null)
                           ProfileTabBarItem(
-                            label: 'Fondos',
-                            icon: MdiIcons.wallpaper,
+                            label: 'Tu música',
+                            icon: MdiIcons.music,
                             selected: _currentTab == 0,
                             onTap: () {
                               setState(() {
@@ -147,7 +148,7 @@ class _ProfileViewState extends State<ProfileView> {
                   ),
                   if (_currentTab == 0 && widget.guest == null)
                     const SliverFillRemaining(
-                      child: WallpaperTabView(),
+                      child: YourMusicTabView(),
                     ),
                   if (_currentTab == 1 &&
                           snapshot.connectionState == ConnectionState.waiting ||

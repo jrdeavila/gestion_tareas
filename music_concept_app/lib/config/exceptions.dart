@@ -16,6 +16,11 @@ abstract class HandlerException {
     if (e is DioException && e.type == DioExceptionType.cancel) {
       return;
     }
+
+    print({
+      "error": e.toString(),
+      "stackTrace": stackTrace.toString(),
+    });
   }
 }
 
