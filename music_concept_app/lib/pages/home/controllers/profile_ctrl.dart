@@ -233,6 +233,14 @@ final accountOptions = {
       return;
     },
   },
+  "spotify-relogin": {
+    "label": "Volver a conectar en Spotify",
+    "icon": MdiIcons.spotify,
+    "onTap": (TapUpDetails details, BuildContext context) {
+      Get.find<SpotifyCtrl>().login();
+      return;
+    },
+  },
   'settings-app': {
     "label": "Configuración de la aplicación",
     "icon": MdiIcons.cog,

@@ -91,9 +91,9 @@ class HistoryCameraView extends StatelessWidget {
             children: [
               IconButton(
                 onPressed: () {
-                  controller.switchCamera();
+                  controller.findOnGallery();
                 },
-                icon: const Icon(Icons.flip_camera_ios),
+                icon: const Icon(Icons.photo_library),
               ),
               GestureDetector(
                 onTap: () {

@@ -103,19 +103,20 @@ abstract class SpotifyService {
     return FirebaseFirestore.instance
         .doc(userRef)
         .collection('tracks')
+        .where("tracks", isNotEqualTo: [])
         .get()
         .then(
-      (value) {
-        if (value.docs.isEmpty) {
-          return [];
-        }
-        List<SpotifyTrack> tracks = value.docs.last
-            .data()['tracks']
-            .map<SpotifyTrack>((e) => SpotifyTrack.fromFirebase(e))
-            .toList();
+          (value) {
+            if (value.docs.isEmpty) {
+              return [];
+            }
+            List<SpotifyTrack> tracks = value.docs.last
+                .data()['tracks']
+                .map<SpotifyTrack>((e) => SpotifyTrack.fromFirebase(e))
+                .toList();
 
-        return tracks;
-      },
-    );
+            return tracks;
+          },
+        );
   }
 }

@@ -47,6 +47,14 @@ class HistoryCameraCtrl extends GetxController {
     _loadingCamera.value = false;
   }
 
+  void findOnGallery() async {
+    PickImageUtility.pickImage().then((value) {
+      if (value != null) {
+        _image.value = value;
+      }
+    });
+  }
+
   Future<void> initializeCamera() async {
     _loadingCamera.value = true;
 
