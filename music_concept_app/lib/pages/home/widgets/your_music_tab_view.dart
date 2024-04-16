@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 import 'package:get/get.dart';
 import 'package:music_concept_app/lib.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class YourMusicTabView extends StatelessWidget {
   final String? accountRef;
@@ -107,6 +109,15 @@ class TrackItem extends StatelessWidget {
                 ),
               ],
             ),
+          ),
+          const SizedBox(
+            width: 10.0,
+          ),
+          HomeAppBarAction(
+            onTap: () {
+              launchUrl(Uri.parse(item.trackURL));
+            },
+            icon: MdiIcons.chevronDoubleRight,
           ),
         ],
       ),
