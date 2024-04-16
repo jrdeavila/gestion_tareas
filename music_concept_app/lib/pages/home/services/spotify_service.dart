@@ -73,7 +73,6 @@ abstract class SpotifyService {
     final res = await dioClient.get("https://api.spotify.com/v1/me/tracks",
         queryParameters: {
           "limit": "10",
-          "offset": "0",
           "market": "ES",
         },
         options: Options(
@@ -110,6 +109,7 @@ abstract class SpotifyService {
             if (value.docs.isEmpty) {
               return [];
             }
+
             List<SpotifyTrack> tracks = value.docs.last
                 .data()['tracks']
                 .map<SpotifyTrack>((e) => SpotifyTrack.fromFirebase(e))

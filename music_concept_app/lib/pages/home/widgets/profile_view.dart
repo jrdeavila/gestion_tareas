@@ -149,7 +149,8 @@ class _ProfileViewState extends State<ProfileView> {
                   if (_currentTab == 0)
                     SliverFillRemaining(
                       child: YourMusicTabView(
-                        accountRef: Get.find<UserCtrl>().user?.id,
+                        accountRef:
+                            (widget.guest?.id ?? Get.find<UserCtrl>().user?.id),
                       ),
                     ),
                   if (_currentTab == 1 &&
