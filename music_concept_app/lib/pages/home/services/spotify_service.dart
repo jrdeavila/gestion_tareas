@@ -72,7 +72,7 @@ abstract class SpotifyService {
       String token) async {
     final res = await dioClient.get("https://api.spotify.com/v1/me/tracks",
         queryParameters: {
-          "limit": "100",
+          "limit": "50",
           "market": "ES",
         },
         options: Options(
