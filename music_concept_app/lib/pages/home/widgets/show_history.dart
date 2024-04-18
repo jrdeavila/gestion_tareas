@@ -118,15 +118,28 @@ class _ShowHistoryState extends State<ShowHistory> {
                 ),
                 Row(
                   children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(20.0),
-                      child: CachingImage(
-                        url: histories.first.userCreator!.imageUrl,
-                        height: 40.0,
-                        width: 40,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
+                    histories.first.userCreator!.imageUrl != null
+                        ? ClipRRect(
+                            borderRadius: BorderRadius.circular(20.0),
+                            child: CachingImage(
+                              url: histories.first.userCreator!.imageUrl!,
+                              height: 40.0,
+                              width: 40,
+                              fit: BoxFit.cover,
+                            ),
+                          )
+                        : Container(
+                            height: 40.0,
+                            width: 40.0,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(20.0),
+                            ),
+                            child: const Icon(
+                              Icons.person,
+                              color: Colors.black,
+                            ),
+                          ),
                     const SizedBox(width: 10.0),
                     Text(
                       histories.first.isMine

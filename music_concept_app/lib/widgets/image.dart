@@ -7,6 +7,7 @@ class CachingImage extends StatefulWidget {
   final double? height;
   final double? width;
   final BoxFit? fit;
+  final Widget errorWidget;
 
   const CachingImage({
     super.key,
@@ -14,6 +15,7 @@ class CachingImage extends StatefulWidget {
     this.height,
     this.width,
     this.fit,
+    this.errorWidget = const Icon(Icons.error),
   });
 
   @override
@@ -39,6 +41,9 @@ class _CachingImageState extends State<CachingImage> {
       height: widget.height,
       width: widget.width,
       fit: widget.fit,
+      errorWidget: (context, url, error) {
+        return widget.errorWidget;
+      },
       placeholder: (context, url) => const Center(
         child: Skeleton(
           width: double.infinity,

@@ -72,7 +72,7 @@ abstract class SpotifyService {
       String token) async {
     final res = await dioClient.get("https://api.spotify.com/v1/me/tracks",
         queryParameters: {
-          "limit": "10",
+          "limit": "100",
           "market": "ES",
         },
         options: Options(
@@ -86,7 +86,8 @@ abstract class SpotifyService {
     return trackModels
         .where(
             (element) => element.name.isNotEmpty && element.artist.isNotEmpty)
-        .toList();
+        .toList()
+        .sublist(0, 10);
   }
 
   static Future<void> saveTracksInUser({
@@ -95,6 +96,7 @@ abstract class SpotifyService {
   }) {
     return FirebaseFirestore.instance.doc(userRef).collection('tracks').add({
       "tracks": tracks.map((e) => e.toFirebase()).toList(),
+      "createdAt": DateTime.now().toIso8601String(),
     });
   }
 
@@ -110,7 +112,23 @@ abstract class SpotifyService {
               return [];
             }
 
-            List<SpotifyTrack> tracks = value.docs.last
+            final orderedDocs = value.docs.where((element) {
+              final createdAt = element.data()['createdAt'] as String;
+              final date = DateTime.parse(createdAt);
+              return date
+                  .isAfter(DateTime.now().subtract(const Duration(days: 1)));
+            }).toList();
+            orderedDocs.sort((a, b) {
+              final createdAtA = a.data()['createdAt'] as String;
+              final createdAtB = b.data()['createdAt'] as String;
+              final dateA = DateTime.parse(createdAtA);
+              final dateB = DateTime.parse(createdAtB);
+              return dateA.compareTo(dateB);
+            });
+
+            final last = orderedDocs.last;
+
+            List<SpotifyTrack> tracks = last
                 .data()['tracks']
                 .map<SpotifyTrack>((e) => SpotifyTrack.fromFirebase(e))
                 .toList();

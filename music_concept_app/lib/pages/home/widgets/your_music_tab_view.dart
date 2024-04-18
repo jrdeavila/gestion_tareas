@@ -83,10 +83,12 @@ class TrackItem extends StatelessWidget {
             ClipRRect(
               borderRadius: BorderRadius.circular(10.0),
               child: CachingImage(
-                url: item.imageURL!,
-                width: 50,
-                height: 50,
-              ),
+                  url: item.imageURL!,
+                  width: 50,
+                  height: 50,
+                  errorWidget: const Icon(
+                    Icons.image,
+                  )),
             ),
           const SizedBox(width: 10.0),
           Expanded(

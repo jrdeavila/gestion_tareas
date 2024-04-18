@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 
 class UserCreator extends Equatable {
   final String name;
-  final String imageUrl;
+  final String? imageUrl;
 
   UserCreator({
     required this.name,
