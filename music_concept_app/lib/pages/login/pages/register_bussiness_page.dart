@@ -11,7 +11,6 @@ class RegisterBussinessPage extends StatelessWidget {
   Widget build(BuildContext context) {
     var ctrl = Get.find<RegisterBussinessCtrl>();
     ctrl.loadInfo(Get.arguments as Map<String, dynamic>);
-    var locationCtrl = Get.find<LocationCtrl>();
     TextEditingController? addressCtrl;
     return Scaffold(
         body: SingleChildScrollView(
@@ -28,9 +27,9 @@ class RegisterBussinessPage extends StatelessWidget {
                 Obx(() {
                   return ResumeMapLocation(
                     position: ctrl.location ??
-                        LatLng(
-                          locationCtrl.position!.latitude,
-                          locationCtrl.position!.longitude,
+                        const LatLng(
+                          0,
+                          0,
                         ),
                     onLocationChange: (place) {
                       ctrl.setLocation(
