@@ -49,8 +49,9 @@ class ProfileDetailsPage extends StatelessWidget {
                     title: "Estado Civil",
                   ),
                   const SizedBox(height: 8.0),
-                  if (status != null) _buildMaritalStatus(status),
-                  if (status == null)
+                  if (status != null || guest == null)
+                    _buildMaritalStatus(status ?? "Soltero"),
+                  if (status == null && guest != null)
                     Text(
                       "No hay estado civil",
                       style: TextStyle(color: Colors.grey[500]),
