@@ -334,7 +334,8 @@ class _ProfileViewState extends State<ProfileView> {
                         ),
                         StreamBuilder(
                             stream: Get.find<ProfileCtrl>()
-                                .getFollowingInCurrentVisit(accountRef: null),
+                                .getFollowingInCurrentVisit(
+                                    accountRef: widget.guest?.id),
                             builder: (context, snapshot) {
                               var length = snapshot.data?.length ?? 0;
                               var limit = 4;
