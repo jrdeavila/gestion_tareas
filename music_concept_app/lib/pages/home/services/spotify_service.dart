@@ -21,7 +21,38 @@ final dioClient = Dio()
     )
   ]);
 
+class SpotifyUserInfo {
+  final String name;
+  final String email;
+  final String? imageUrl;
+
+  SpotifyUserInfo({
+    required this.name,
+    required this.email,
+    required this.imageUrl,
+  });
+}
+
 abstract class SpotifyService {
+  static Future<SpotifyUserInfo> getUserInfo(String token) async {
+    final res = await dioClient.get("https://api.spotify.com/v1/me",
+        options: Options(
+          headers: {
+            "Authorization": "Bearer $token",
+          },
+        ));
+    final name = res.data['display_name'] as String;
+    final email = res.data['email'] as String;
+    final imageUrl = (res.data['images'] as List).isNotEmpty
+        ? res.data['images'][0]['url'] as String
+        : null;
+    return SpotifyUserInfo(
+      name: name,
+      email: email,
+      imageUrl: imageUrl,
+    );
+  }
+
   static Future<AccessTokenResponse> loginWithSpotify() async {
     final client = SpotifyOAuth2Client(
       customUriScheme: "com.beatconnect.app",

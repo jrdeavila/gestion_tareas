@@ -57,6 +57,7 @@ class _ProfileViewState extends State<ProfileView> {
               guestRef: widget.guest?.reference.path,
             ),
             builder: (context, snapshot) {
+              var spotifyCtrl = Get.find<SpotifyCtrl>();
               return CustomScrollView(
                 controller: _scrollCtrl,
                 physics: const BouncingScrollPhysics(),
@@ -78,16 +79,51 @@ class _ProfileViewState extends State<ProfileView> {
                       },
                     ),
                     actions: [
-                      if (widget.guest == null &&
-                          !Get.find<SpotifyCtrl>().isLogged)
-                        HomeAppBarAction(
-                          selected: true,
-                          icon: MdiIcons.spotify,
-                          light: true,
-                          onTap: () {
-                            Get.find<SpotifyCtrl>().login();
-                          },
-                        ),
+                      Obx(() {
+                        return spotifyCtrl.hasUserInfo
+                            ? Center(
+                                child: GestureDetector(
+                                  onTap: () {
+                                    spotifyCtrl.logout();
+                                  },
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 20.0, vertical: 10.0),
+                                    decoration: BoxDecoration(
+                                      color: Get.theme.colorScheme.primary,
+                                      borderRadius: BorderRadius.circular(20.0),
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        const Icon(
+                                          MdiIcons.spotify,
+                                        ),
+                                        const SizedBox(
+                                          width: 10.0,
+                                        ),
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            if (Get.size.width > 300)
+                                              Text(spotifyCtrl.userInfo.email)
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              )
+                            : HomeAppBarAction(
+                                selected: true,
+                                icon: MdiIcons.spotify,
+                                light: true,
+                                onTap: () {
+                                  Get.find<SpotifyCtrl>().login();
+                                },
+                              );
+                      }),
                       const SizedBox(width: 10.0),
                       if (widget.guest == null)
                         HomeAppBarAction(
