@@ -88,29 +88,13 @@ class _ProfileViewState extends State<ProfileView> {
                                   },
                                   child: Container(
                                     padding: const EdgeInsets.symmetric(
-                                        horizontal: 20.0, vertical: 10.0),
+                                        horizontal: 10.0, vertical: 10.0),
                                     decoration: BoxDecoration(
                                       color: Get.theme.colorScheme.primary,
                                       borderRadius: BorderRadius.circular(20.0),
                                     ),
-                                    child: Row(
-                                      children: [
-                                        const Icon(
-                                          MdiIcons.spotify,
-                                        ),
-                                        const SizedBox(
-                                          width: 10.0,
-                                        ),
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            if (Get.size.width > 300)
-                                              Text(spotifyCtrl.userInfo.email)
-                                          ],
-                                        ),
-                                      ],
+                                    child: const Icon(
+                                      MdiIcons.spotify,
                                     ),
                                   ),
                                 ),
