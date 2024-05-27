@@ -20,6 +20,7 @@ class ReedView extends StatelessWidget {
           child: CustomScrollView(
               physics: const BouncingScrollPhysics(),
               slivers: [
+                const SliverToBoxAdapter(child: BusinessConnection()),
                 const SliverToBoxAdapter(
                   child: SizedBox(
                     height: 250,
@@ -219,7 +220,14 @@ class BusinessConnection extends GetView<UserCtrl> {
             return const SizedBox.shrink();
           }
           return GestureDetector(
-            onTap: () {},
+            onTap: () {
+              if (snapshot.data!['currentVisit'] == null) {
+                return;
+              }
+              Get.find<ChatCtrl>().openNewChat(
+                receiverRef: snapshot.data!['currentVisit'],
+              );
+            },
             child: Container(
               padding: const EdgeInsets.all(16.0),
               margin: const EdgeInsets.only(bottom: 16.0),
@@ -231,18 +239,18 @@ class BusinessConnection extends GetView<UserCtrl> {
                   future: UserAccountService.getAccountName(
                       snapshot.data!['currentVisit']),
                   builder: (context, snapshot) {
-                    return const Column(
+                    return Column(
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "Estas compartiendo en Nombre del establecimiento",
-                          style: TextStyle(
+                          "Estas compartiendo en ${snapshot.data}",
+                          style: const TextStyle(
                             fontSize: 18.0,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        Text(
+                        const Text(
                           "¿Desea interactuar con nosotros?",
                           style: TextStyle(
                             fontSize: 14.0,

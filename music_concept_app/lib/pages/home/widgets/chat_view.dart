@@ -86,6 +86,7 @@ class FriendItem extends StatelessWidget {
               name: snapshot.data?.data()?['name'],
               active: snapshot.data?.data()?['active'] ?? false,
               hasVisit: snapshot.data?.data()?['currentVisit'] != null,
+              isClickable: false,
             ),
           ),
         );
@@ -121,6 +122,7 @@ class ConversationItem extends StatelessWidget {
             name: snapshot.data?.data()?['name'],
             active: snapshot.data?.data()?['active'] ?? false,
             hasVisit: snapshot.data?.data()?['currentVisit'] != null,
+            isClickable: false,
           ),
           title: Text(
             snapshot.data?.data()?['name'] ?? "**************",

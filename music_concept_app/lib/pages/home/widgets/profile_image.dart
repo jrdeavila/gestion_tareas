@@ -12,6 +12,7 @@ class ProfileImage extends StatelessWidget {
     this.active = false,
     this.hasVisit = false,
     this.isBusiness = false,
+    this.isClickable = true,
   });
 
   final String? image;
@@ -19,6 +20,7 @@ class ProfileImage extends StatelessWidget {
   final double fontSize;
   final double avatarSize;
   final bool active, hasVisit, isBusiness;
+  final bool isClickable;
 
   @override
   Widget build(BuildContext context) {
@@ -26,11 +28,13 @@ class ProfileImage extends StatelessWidget {
     final percent = isBusiness ? 4 : 2;
     var avatarWidth = avatarSize * (isBusiness ? 2.0 : 1.0);
     return GestureDetector(
-      onTap: () {
-        if (hasImage) {
-          Get.to(() => ImagePreviewPage(imageUrl: image!));
-        }
-      },
+      onTap: isClickable
+          ? () {
+              if (hasImage) {
+                Get.to(() => ImagePreviewPage(imageUrl: image!));
+              }
+            }
+          : null,
       child: SizedBox(
         height: avatarSize,
         width: avatarWidth,

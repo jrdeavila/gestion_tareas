@@ -17,6 +17,7 @@ abstract class AppRoutes {
   static const String mapsFindLocation = "/map-find-location";
   static const String mapsViewLocation = "/maps-view-location";
   static const String mapsViewBusiness = "/maps-view-business";
+  static const String businessConnection = "/business-connection";
 
   static const String home = "/home";
   static const String notWifi = "/not-wifi";
