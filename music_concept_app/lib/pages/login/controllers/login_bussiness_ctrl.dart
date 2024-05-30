@@ -25,7 +25,8 @@ class RegisterBussinessCtrl extends GetxController {
     categories.bindStream(AppConfigService.bussinessCategories);
   }
 
-  void loadInfo(Map<String, dynamic> data) {
+  void loadInfo(Map<String, dynamic>? data) {
+    if (data == null) return;
     _name.value = data["name"];
     _email.value = data["email"];
     _password.value = data["password"];

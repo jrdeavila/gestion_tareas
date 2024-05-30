@@ -101,7 +101,8 @@ abstract class SpotifyService {
 
   static Future<List<SpotifyTrack>> getRecentlyPlayedTracks(
       String token) async {
-    final res = await dioClient.get("https://api.spotify.com/v1/me/tracks",
+    final res = await dioClient.get(
+        "https://api.spotify.com/v1/me/player/recently-played",
         queryParameters: {
           "limit": "50",
           "market": "ES",

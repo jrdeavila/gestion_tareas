@@ -6,12 +6,12 @@ import 'package:music_concept_app/lib.dart';
 
 class PositionDetails extends StatelessWidget {
   final LatLng? mainPoint;
-  final PlaceDetails? placeDetails;
+  final Place? place;
   final VoidCallback? onTap;
   final bool selected;
   const PositionDetails({
     super.key,
-    this.placeDetails,
+    this.place,
     this.onTap,
     this.selected = false,
     this.mainPoint,
@@ -44,7 +44,7 @@ class PositionDetails extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Text(
-                    placeDetails?.result?.name ?? '',
+                    place?.displayName.text ?? "",
                     style: TextStyle(
                       color: Get.theme.colorScheme.onPrimary,
                       fontSize: 18.0,
@@ -55,7 +55,7 @@ class PositionDetails extends StatelessWidget {
                     textAlign: TextAlign.start,
                   ),
                   Text(
-                    placeDetails?.result?.formattedAddress ?? '',
+                    place?.formattedAddress ?? "",
                     style: TextStyle(
                       color: Get.theme.colorScheme.onPrimary,
                       overflow: TextOverflow.ellipsis,
@@ -70,8 +70,8 @@ class PositionDetails extends StatelessWidget {
                       GeolocationUtils.distanceBetweenString(
                         mainPoint!.latitude,
                         mainPoint!.longitude,
-                        placeDetails!.result!.geometry!.location!.lat!,
-                        placeDetails!.result!.geometry!.location!.lng!,
+                        place!.location.latitude,
+                        place!.location.longitude,
                       ),
                       style: TextStyle(
                         color: Get.theme.colorScheme.onPrimary,

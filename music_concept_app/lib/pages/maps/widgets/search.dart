@@ -10,7 +10,7 @@ class SearchPlacesTextField extends StatefulWidget {
     this.onTapItem,
   });
 
-  final void Function(Prediction position)? onTapItem;
+  final void Function(Place place)? onTapItem;
 
   @override
   State<SearchPlacesTextField> createState() => _SearchPlacesTextFieldState();
@@ -54,7 +54,7 @@ class _SearchPlacesTextFieldState extends State<SearchPlacesTextField> {
               color: Colors.grey[400],
             ),
           ),
-          hintText: 'Buscar direccion',
+          hintText: 'Buscar dirección',
           hintStyle: TextStyle(
             color: Colors.grey[400],
           ),
@@ -68,7 +68,7 @@ class _SearchPlacesTextFieldState extends State<SearchPlacesTextField> {
     );
   }
 
-  _showPredictions(List<Prediction> predictions) {
+  _showPlaces(List<Place> predictions) {
     final renderBox =
         _searchFieldKey.currentContext!.findRenderObject() as RenderBox;
     final size = renderBox.size;
@@ -109,7 +109,7 @@ class _SearchPlacesTextFieldState extends State<SearchPlacesTextField> {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children:
-                            predictions.map((e) => _predictionItem(e)).toList(),
+                            predictions.map((e) => _placeItem(e)).toList(),
                       ),
                     ),
                   ),
@@ -122,10 +122,10 @@ class _SearchPlacesTextFieldState extends State<SearchPlacesTextField> {
     });
   }
 
-  ListTile _predictionItem(Prediction prediction) {
+  ListTile _placeItem(Place place) {
     return ListTile(
       onTap: () {
-        _onTapItem(prediction);
+        _onTapItem(place);
       },
       minVerticalPadding: 10.0,
       leading: Icon(
@@ -134,7 +134,7 @@ class _SearchPlacesTextFieldState extends State<SearchPlacesTextField> {
       ),
       minLeadingWidth: 0,
       title: Text(
-        "${prediction.description}",
+        place.displayName.text,
         style: TextStyle(
           color: Colors.grey[300],
         ),
@@ -144,14 +144,14 @@ class _SearchPlacesTextFieldState extends State<SearchPlacesTextField> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            prediction.structuredFormatting?.mainText ?? "",
+            place.formattedAddress,
             style: TextStyle(
               color: Colors.grey[400],
               fontSize: 12.0,
             ),
           ),
           Text(
-            prediction.structuredFormatting?.secondaryText ?? "",
+            place.formattedAddress,
             style: TextStyle(
               color: Colors.grey[400],
               fontSize: 12.0,
@@ -178,12 +178,15 @@ class _SearchPlacesTextFieldState extends State<SearchPlacesTextField> {
         _cancelToken = CancelToken();
 
         SearchPlacesServices.searchPlaces(
-                value: value, cancelToken: _cancelToken)
+                latitudeRef: Get.find<LocationCtrl>().latLng.latitude,
+                longitudeRef: Get.find<LocationCtrl>().latLng.longitude,
+                value: value,
+                cancelToken: _cancelToken)
             .then((response) {
           if (response.isNotEmpty) {
             _overlayEntry?.remove();
             _overlayEntry = null;
-            _overlayEntry = _showPredictions(response);
+            _overlayEntry = _showPlaces(response);
             Overlay.of(context).insert(_overlayEntry!);
           }
         });
@@ -191,13 +194,8 @@ class _SearchPlacesTextFieldState extends State<SearchPlacesTextField> {
     );
   }
 
-  void _onTapItem(Prediction prediction) {
+  void _onTapItem(Place place) {
     _clearPlaces();
-    SearchPlacesServices.searchPlaceDetails(prediction.placeId!)
-        .then((response) {
-      prediction.lat = response.result?.geometry?.location?.lat?.toString();
-      prediction.lng = response.result?.geometry?.location?.lng?.toString();
-      widget.onTapItem?.call(prediction);
-    });
+    widget.onTapItem?.call(place);
   }
 }

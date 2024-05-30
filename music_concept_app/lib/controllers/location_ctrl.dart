@@ -14,6 +14,11 @@ class LocationCtrl extends GetxController {
   bool get permissionsBlocked =>
       _permissions.value == LocationPermission.deniedForever;
 
+  LatLng get latLng => LatLng(
+        _position.value?.latitude ?? -73.2538,
+        _position.value?.longitude ?? 10.002,
+      );
+
   void setHasPermissions(bool hasPermissions) {
     _hasPermissions.value = hasPermissions;
   }

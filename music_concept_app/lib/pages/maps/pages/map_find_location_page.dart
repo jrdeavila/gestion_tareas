@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 import 'package:get/get.dart';
@@ -14,7 +15,7 @@ class ResumeMapLocation extends StatefulWidget {
   });
 
   final LatLng? position;
-  final void Function(PlaceDetails)? onLocationChange;
+  final void Function(double latitude, double longitude)? onLocationChange;
   final double radius;
   final double margin;
 
@@ -55,7 +56,10 @@ class _ResumeMapLocationState extends State<ResumeMapLocation> {
                         ),
                       ),
                     );
-                    widget.onLocationChange?.call(value);
+                    widget.onLocationChange?.call(
+                      value.result!.geometry!.location!.lat!,
+                      value.result!.geometry!.location!.lng!,
+                    );
                   }
                 });
               },
@@ -100,7 +104,8 @@ class MapFindLocationPage extends StatefulWidget {
 class _MapFindLocationPageState extends State<MapFindLocationPage> {
   GoogleMapController? _controller;
   late LatLng? _point;
-  PlaceDetails? _selectedPoint;
+  Place? _selectedPlace;
+  LatLng? _selectedPoint;
 
   @override
   void initState() {
@@ -123,6 +128,8 @@ class _MapFindLocationPageState extends State<MapFindLocationPage> {
             child: GoogleMap(
                 onLongPress: (latLng) {
                   _point = latLng;
+                  _selectedPlace = null;
+                  _selectedPoint = latLng;
                   _animateTo(lat: latLng.latitude, lng: latLng.longitude);
                   setState(() {});
                 },
@@ -162,14 +169,23 @@ class _MapFindLocationPageState extends State<MapFindLocationPage> {
                         infoWindow: const InfoWindow(
                           title: "Ubicacion GPS",
                         )),
-                  if (_selectedPoint != null)
+                  if (_selectedPlace != null && _selectedPoint == null)
                     Marker(
                       infoWindow: const InfoWindow(title: "Punto seleccionado"),
                       markerId: const MarkerId('2'),
                       position: LatLng(
-                        _selectedPoint!.result!.geometry!.location!.lat!,
-                        _selectedPoint!.result!.geometry!.location!.lng!,
+                        _selectedPlace!.location.latitude,
+                        _selectedPlace!.location.longitude,
                       ),
+                      icon: BitmapDescriptor.defaultMarkerWithHue(
+                        BitmapDescriptor.hueBlue,
+                      ),
+                    ),
+                  if (_selectedPlace == null && _selectedPoint != null)
+                    Marker(
+                      infoWindow: const InfoWindow(title: "Punto seleccionado"),
+                      markerId: const MarkerId('2'),
+                      position: _selectedPoint!,
                       icon: BitmapDescriptor.defaultMarkerWithHue(
                         BitmapDescriptor.hueBlue,
                       ),
@@ -177,7 +193,7 @@ class _MapFindLocationPageState extends State<MapFindLocationPage> {
                   if (_point != null)
                     Marker(
                       infoWindow: const InfoWindow(
-                        title: "Marca de busqueda",
+                        title: "Marca de búsqueda",
                       ),
                       zIndex: 2,
                       markerId: const MarkerId('3'),
@@ -193,8 +209,8 @@ class _MapFindLocationPageState extends State<MapFindLocationPage> {
             child: SearchPlacesTextField(
               onTapItem: (item) {
                 var latLng = LatLng(
-                  double.parse(item.lat!),
-                  double.parse(item.lng!),
+                  item.location.latitude,
+                  item.location.longitude,
                 );
                 _animateTo(
                   lat: latLng.latitude,
@@ -202,6 +218,7 @@ class _MapFindLocationPageState extends State<MapFindLocationPage> {
                 );
 
                 _point = latLng;
+
                 setState(() {});
               },
             ),
@@ -216,9 +233,8 @@ class _MapFindLocationPageState extends State<MapFindLocationPage> {
               heroTag: "select_location",
               child: const Icon(MdiIcons.mapMarkerCheck),
               onPressed: () {
-                if (_selectedPoint != null) {
-                  Get.back(result: _selectedPoint);
-                }
+                if (_selectedPoint == null) return;
+                Get.back(result: _selectedPoint);
               },
             ),
           ),
@@ -231,13 +247,11 @@ class _MapFindLocationPageState extends State<MapFindLocationPage> {
               backgroundColor: Colors.grey[700],
               child: const Icon(MdiIcons.mapMarker),
               onPressed: () {
-                _point = LatLng(
-                  ctrl.position!.latitude,
-                  ctrl.position!.longitude,
-                );
+                _point = ctrl.latLng;
+                _selectedPoint = _point;
                 _animateTo(
-                  lat: ctrl.position?.latitude,
-                  lng: ctrl.position?.longitude,
+                  lat: _point!.latitude,
+                  lng: _point!.longitude,
                 );
                 setState(() {});
               },
@@ -297,7 +311,7 @@ class _MapFindLocationPageState extends State<MapFindLocationPage> {
                         Padding(
                           padding: const EdgeInsets.only(left: 15.0),
                           child: Text(
-                            "Si no puedes encontrar tu direccion, puedes utilizar los lugares alternativos que queden cerca de tu ubicacion.",
+                            "Si no puedes encontrar tu dirección, puedes utilizar los lugares alternativos que queden cerca de tu ubicación.",
                             style: TextStyle(
                               color: Colors.grey[400],
                               fontSize: 14.0,
@@ -330,13 +344,17 @@ class _MapFindLocationPageState extends State<MapFindLocationPage> {
 
                                     return PositionDetails(
                                       mainPoint: _point,
-                                      selected: item?.result?.placeId ==
-                                          _selectedPoint?.result?.placeId,
+                                      selected: item?.formattedAddress ==
+                                          _selectedPlace?.formattedAddress,
                                       onTap: () {
-                                        _selectedPoint = item;
+                                        _selectedPlace = item;
+                                        _selectedPoint = LatLng(
+                                          item!.location.latitude,
+                                          item.location.longitude,
+                                        );
                                         setState(() {});
                                       },
-                                      placeDetails: item,
+                                      place: item,
                                     );
                                   }),
                                   itemCount: snapshot.data?.length ?? 0,

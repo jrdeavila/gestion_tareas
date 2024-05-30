@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -20,6 +21,15 @@ void main() async {
 
       initializeDateFormatting('es');
       timeago.setLocaleMessages('es', timeago.EsMessages());
+
+      SystemChrome.setSystemUIOverlayStyle(
+        const SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          // statusBarIconBrightness: Brightness.dark,
+          // systemNavigationBarColor: Colors.transparent,
+          // systemNavigationBarIconBrightness: Brightness.dark,
+        ),
+      );
 
       Get.putAsync(() async {
         final apps = await Future.wait([
@@ -39,6 +49,7 @@ void main() async {
         return FirebaseCtrl(apps);
       });
 
+      Get.lazyPut(() => LocationCtrl());
       Get.lazyPut(() => LoginCtrl());
       Get.lazyPut(() => RegisterCtrl());
       Get.lazyPut(() => ResetPasswordCtrl());
@@ -65,7 +76,7 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       title: AppDefaults.titleName,
       routes: AppRoutes.routes,
-      initialRoute: AppRoutes.initialRoute,
+      initialRoute: AppRoutes.root,
       theme: ColorPalete.themeData,
     );
   }

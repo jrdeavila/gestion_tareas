@@ -10,14 +10,14 @@ class RegisterBussinessPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var ctrl = Get.find<RegisterBussinessCtrl>();
-    ctrl.loadInfo(Get.arguments as Map<String, dynamic>);
+    ctrl.loadInfo(Get.arguments as Map<String, dynamic>?);
     TextEditingController? addressCtrl;
     return Scaffold(
         body: SingleChildScrollView(
       child: Column(
         children: [
           const LoginHeader(
-            title: "Registrate",
+            title: "Regístrate",
           ),
           Container(
             padding: const EdgeInsets.all(20),
@@ -31,18 +31,11 @@ class RegisterBussinessPage extends StatelessWidget {
                           0,
                           0,
                         ),
-                    onLocationChange: (place) {
-                      ctrl.setLocation(
-                        LatLng(
-                          place.result!.geometry!.location!.lat!,
-                          place.result!.geometry!.location!.lng!,
-                        ),
-                      );
-                      final address =
-                          place.result!.formattedAddress ?? place.result!.name!;
-                      addressCtrl?.text = address;
-
-                      ctrl.setAddress(address);
+                    onLocationChange: (
+                      double latitude,
+                      double longitude,
+                    ) {
+                      ctrl.setLocation(LatLng(latitude, longitude));
                     },
                   );
                 }),

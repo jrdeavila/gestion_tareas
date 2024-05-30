@@ -48,30 +48,7 @@ class Prediction {
       this.lat,
       this.lng});
 
-  Prediction.fromJson(Map<String, dynamic> json) {
-    description = json['description'];
-    id = json['id'];
-    if (json['matched_substrings'] != null) {
-      matchedSubstrings = [];
-      json['matched_substrings'].forEach((v) {
-        matchedSubstrings!.add(MatchedSubstrings.fromJson(v));
-      });
-    }
-    placeId = json['place_id'];
-    reference = json['reference'];
-    structuredFormatting = json['structured_formatting'] != null
-        ? StructuredFormatting.fromJson(json['structured_formatting'])
-        : null;
-    if (json['terms'] != null) {
-      terms = [];
-      json['terms'].forEach((v) {
-        terms!.add(Terms.fromJson(v));
-      });
-    }
-    types = json['types'].cast<String>();
-    lat = json['lat'];
-    lng = json['lng'];
-  }
+  Prediction.fromJson(Map<String, dynamic> json) {}
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
