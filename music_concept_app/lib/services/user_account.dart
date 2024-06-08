@@ -69,6 +69,9 @@ abstract class UserAccountService {
         .where("currentVisit", isNull: false)
         .get();
     var query = results.docs
+        .where((element) =>
+            (element["profileBusinessStatusVisibility"] as String) ==
+            "everyone")
         .where((element) => (element["name"] as String).toLowerCase().contains(
               searchText.toLowerCase(),
             ));
