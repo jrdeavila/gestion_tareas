@@ -32,7 +32,7 @@ abstract class SearchPlacesServices {
           "Content-Type": "application/json",
           "X-Goog-Api-Key": AppDefaults.googleApiKeyPlaces,
           "X-Goog-FieldMask":
-              "places.formattedAddress,places.displayName,places.priceLevel,places.location,places.placeId"
+              "places.formattedAddress,places.displayName,places.priceLevel,places.location,places.id"
         },
       ),
       cancelToken: cancelToken,
@@ -100,4 +100,4 @@ abstract class SearchPlacesServices {
   }
 }
 
-Dio _dio = Dio();
+Dio _dio = Dio()..interceptors.add(LogInterceptor(responseBody: true));

@@ -43,7 +43,7 @@ class Place {
   });
 
   factory Place.fromJson(Map<String, dynamic> json) => Place(
-        placeId: json["placeId"],
+        placeId: json["id"],
         formattedAddress: json["formattedAddress"],
         location: PlaceLocation.fromJson(json["location"]),
         displayName: DisplayName.fromJson(json["displayName"]),

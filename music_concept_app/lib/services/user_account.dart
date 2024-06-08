@@ -113,19 +113,30 @@ abstract class UserAccountService {
       user.sendEmailVerification();
       final id = user.uid;
 
-      final imagePath =
-          image != null ? setAvatar(accountRef: id, image: image) : null;
-
-      transaction.set(FirebaseFirestore.instance.collection("users").doc(id), {
+      transaction = transaction
+          .set(FirebaseFirestore.instance.collection("users").doc(id), {
         "name": name,
         "email": email,
-        "image": imagePath,
         "address": address,
         "category": category,
         "type": type.index,
         "location": location != null
             ? GeoPoint(location.latitude, location.longitude)
             : null,
+      });
+
+      String? imagePath;
+      try {
+        image != null
+            ? imagePath = await setAvatar(accountRef: id, image: image)
+            : null;
+      } catch (e) {
+        imagePath = null;
+      }
+
+      transaction = transaction
+          .update(FirebaseFirestore.instance.collection("users").doc(id), {
+        "image": imagePath,
       });
     });
   }
@@ -262,6 +273,16 @@ abstract class UserAccountService {
       {required String accountRef, required SettingsPrivacyView value}) {
     return FirebaseFirestore.instance.doc(accountRef).update({
       "profileBusinessStatusVisibility": privacyViewValue(value),
+    });
+  }
+
+  static Future<void> deleteAccount(String uid,
+      {required FirebaseApp firebaseApp}) {
+    return FirebaseFirestore.instance.runTransaction((transaction) async {
+      transaction =
+          transaction.delete(FirebaseFirestore.instance.doc("users/$uid"));
+      transaction =
+          transaction.delete(FirebaseFirestore.instance.doc("business/$uid"));
     });
   }
 }
