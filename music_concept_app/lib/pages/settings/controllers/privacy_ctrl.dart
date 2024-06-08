@@ -23,9 +23,11 @@ class PrivacyCtrl extends GetxController {
       _profileBusinessStatusVisibility,
       _onChangeProfileBusinessStatusVisibility,
     );
+    ever(_profileTripStatusVisibility, _onChangeProfileTripStatusVisibility);
     _fetchProfileAvatarVisibility();
     _fetchProfileStatusVisibility();
     _fetchProfileBusinessStatusVisibility();
+    _fetchProfileTripStatusVisibility();
   }
 
   // --------------------------------------------------------------------------
@@ -46,6 +48,13 @@ class PrivacyCtrl extends GetxController {
 
   void _onChangeProfileBusinessStatusVisibility(SettingsPrivacyView? value) {
     UserAccountService.changeProfileBusinessStatusVisibility(
+      accountRef: "users/${_authApp.currentUser!.uid}",
+      value: value!,
+    );
+  }
+
+  void _onChangeProfileTripStatusVisibility(SettingsPrivacyView? value) {
+    UserAccountService.changeProfileTripStatusVisibility(
       accountRef: "users/${_authApp.currentUser!.uid}",
       value: value!,
     );
@@ -72,6 +81,13 @@ class PrivacyCtrl extends GetxController {
     _profileBusinessStatusVisibility.value = value;
   }
 
+  Future<void> _fetchProfileTripStatusVisibility() async {
+    final value = await UserAccountService.getProfileTripStatusVisibility(
+      "users/${_authApp.currentUser!.uid}",
+    );
+    _profileTripStatusVisibility.value = value;
+  }
+
   // --------------------------------------------------------------------------
 
   final Rx<SettingsPrivacyView?> _profileAvatarVisibility =
@@ -81,6 +97,9 @@ class PrivacyCtrl extends GetxController {
       Rx<SettingsPrivacyView?>(null);
 
   final Rx<SettingsPrivacyView?> _profileBusinessStatusVisibility =
+      Rx<SettingsPrivacyView?>(null);
+
+  final Rx<SettingsPrivacyView?> _profileTripStatusVisibility =
       Rx<SettingsPrivacyView?>(null);
 
   // --------------------------------------------------------------------------
@@ -94,6 +113,9 @@ class PrivacyCtrl extends GetxController {
   SettingsPrivacyView? get profileBusinessStatusVisibility =>
       _profileBusinessStatusVisibility.value;
 
+  SettingsPrivacyView? get profileTripStatusVisibility =>
+      _profileTripStatusVisibility.value;
+
   // --------------------------------------------------------------------------
 
   void changeProfileAvatarVisibility(SettingsPrivacyView? value) {
@@ -106,6 +128,10 @@ class PrivacyCtrl extends GetxController {
 
   void changeProfileBusinessStatusVisibility(SettingsPrivacyView? p0) {
     _profileBusinessStatusVisibility.value = p0;
+  }
+
+  void changeProfileTripStatusVisibility(SettingsPrivacyView? p0) {
+    _profileTripStatusVisibility.value = p0;
   }
 
   // --------------------------------------------------------------------------

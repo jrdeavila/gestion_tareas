@@ -52,6 +52,18 @@ class SettingsPrivacyPage extends StatelessWidget {
                     },
                   ),
                 )),
+            ListTile(
+              title: const Text("Registro de visitas"),
+              subtitle: const Text(
+                "Controla quien puede ver tu registro de visitas",
+              ),
+              trailing: Obx(() => DropdownPrivacyView(
+                    value: controller.profileTripStatusVisibility,
+                    onChange: (p0) {
+                      controller.changeProfileTripStatusVisibility(p0);
+                    },
+                  )),
+            ),
           ],
         ));
   }

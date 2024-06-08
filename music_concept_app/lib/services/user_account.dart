@@ -285,6 +285,20 @@ abstract class UserAccountService {
           transaction.delete(FirebaseFirestore.instance.doc("business/$uid"));
     });
   }
+
+  static Future<SettingsPrivacyView> getProfileTripStatusVisibility(String s) {
+    return FirebaseFirestore.instance.doc(s).get().then(
+          (value) =>
+              privacyFromValue(value.data()!["profileTripStatusVisibility"]),
+        );
+  }
+
+  static Future<void> changeProfileTripStatusVisibility(
+      {required String accountRef, required SettingsPrivacyView value}) {
+    return FirebaseFirestore.instance.doc(accountRef).update({
+      "profileTripStatusVisibility": privacyViewValue(value),
+    });
+  }
 }
 
 enum UserAccountType {

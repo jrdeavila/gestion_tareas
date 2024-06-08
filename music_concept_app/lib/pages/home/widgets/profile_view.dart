@@ -154,15 +154,22 @@ class _ProfileViewState extends State<ProfileView> {
                                 _currentTab = 1;
                               });
                             }),
-                        ProfileTabBarItem(
-                            label: 'Visitas',
-                            icon: MdiIcons.sitemap,
-                            selected: _currentTab == 2,
-                            onTap: () {
-                              setState(() {
-                                _currentTab = 2;
-                              });
-                            }),
+                        if (widget.guest == null ||
+                            widget.guest
+                                    ?.data()?['profileTripStatusVisibility'] ==
+                                "everyone" ||
+                            widget.guest
+                                    ?.data()?['profileTripStatusVisibility'] ==
+                                "friends")
+                          ProfileTabBarItem(
+                              label: 'Visitas',
+                              icon: MdiIcons.sitemap,
+                              selected: _currentTab == 2,
+                              onTap: () {
+                                setState(() {
+                                  _currentTab = 2;
+                                });
+                              }),
                       ],
                     ),
                   ),
