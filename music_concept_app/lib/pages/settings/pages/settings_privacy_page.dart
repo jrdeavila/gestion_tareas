@@ -11,7 +11,7 @@ class SettingsPrivacyPage extends StatelessWidget {
         Get.put(PrivacyCtrl(Get.find<FirebaseCtrl>().defaultApp));
     return Scaffold(
         appBar: AppBar(
-          title: const Text("Configuracion de privacidad"),
+          title: const Text("Configuración de privacidad"),
         ),
         body: ListView(
           children: [
@@ -84,10 +84,10 @@ class DropdownPrivacyView extends StatelessWidget {
         value: value,
         onChanged: onChange,
         items: [
-          DropdownMenuItem(
-            value: SettingsPrivacyView.friends,
-            child: Text(privacyViewLabel(SettingsPrivacyView.friends)),
-          ),
+          // DropdownMenuItem(
+          //   value: SettingsPrivacyView.friends,
+          //   child: Text(privacyViewLabel(SettingsPrivacyView.friends)),
+          // ),
           DropdownMenuItem(
             value: SettingsPrivacyView.nobody,
             child: Text(privacyViewLabel(SettingsPrivacyView.nobody)),
