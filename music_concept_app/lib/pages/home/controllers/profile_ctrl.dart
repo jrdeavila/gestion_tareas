@@ -3,10 +3,12 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:music_concept_app/lib.dart';
 
 class ProfileCtrl extends GetxController {
@@ -246,6 +248,24 @@ final accountOptions = {
     "icon": MdiIcons.accountCog,
     "onTap": (TapUpDetails details, BuildContext context) {
       Get.toNamed(AppRoutes.settingsPrivacy);
+      return;
+    },
+  },
+  'update-location': {
+    "label": "Actualizar ubicación",
+    "icon": MdiIcons.mapMarker,
+    "onTap": (TapUpDetails details, BuildContext context) {
+      Get.toNamed(AppRoutes.mapsFindLocation)?.then((value) {
+        if (kDebugMode) {
+          print(value);
+        }
+        if (value is LatLng) {
+          UserAccountService.setLocation(
+            accountRef: "users/${FirebaseAuth.instance.currentUser!.uid}",
+            location: value,
+          );
+        }
+      });
       return;
     },
   },

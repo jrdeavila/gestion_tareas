@@ -146,6 +146,15 @@ abstract class UserAccountService {
     });
   }
 
+  static Future<void> setLocation({
+    required String accountRef,
+    required LatLng location,
+  }) {
+    return FirebaseFirestore.instance.doc(accountRef).update({
+      "location": GeoPoint(location.latitude, location.longitude),
+    });
+  }
+
   static Future<String> setAvatar({
     required String accountRef,
     required Uint8List image,

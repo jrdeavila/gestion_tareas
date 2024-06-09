@@ -33,7 +33,7 @@ class HomeDrawer extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          "Opciones de configuracion",
+                          "Opciones de configuración",
                           style: TextStyle(
                             fontSize: 12.0,
                             color: Colors.grey[300],
