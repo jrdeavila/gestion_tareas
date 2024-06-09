@@ -123,6 +123,27 @@ abstract class FollowingFollowersServices {
     });
   }
 
+  // Future get friends
+
+  static Future<List<String>> getFriendsFuture(
+      {required String accountRef}) async {
+    final query = await FirebaseFirestore.instance
+        .collection("follows")
+        .where("followingRef", isEqualTo: accountRef)
+        .get();
+
+    var friends = <FdSnapshot>[];
+    for (var item in query.docs) {
+      var isAFriend = await accountIsFriendFuture(
+          accountRef: item.data()['followingRef'],
+          userRef: item.data()['followerRef']);
+      if (isAFriend) {
+        friends.add(item);
+      }
+    }
+    return friends.map((e) => e.data()!['followerRef'] as String).toList();
+  }
+
   static Future<bool> accountIsFriendFuture({
     required String accountRef,
     required String userRef,

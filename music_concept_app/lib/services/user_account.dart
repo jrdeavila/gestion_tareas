@@ -61,21 +61,23 @@ abstract class UserAccountService {
     return privacyFromValue(value);
   }
 
-  static Future<List<QueryDocumentSnapshot<Map<String, dynamic>>>>
-      searchAccountsVisiting(String searchText) async {
-    QuerySnapshot<Map<String, dynamic>> results = await FirebaseFirestore
-        .instance
-        .collection("users")
-        .where("currentVisit", isNull: false)
-        .get();
-    var query = results.docs
-        .where((element) =>
-            (element["profileBusinessStatusVisibility"] as String) ==
-            "everyone")
+  static Future<List<DocumentSnapshot<Map<String, dynamic>>>>
+      searchAccountsVisiting(String accountRef, String searchText) async {
+    final friends = await FollowingFollowersServices.getFriendsFuture(
+        accountRef: "users/$accountRef");
+    final friendsVisiting = <DocumentSnapshot<Map<String, dynamic>>>[];
+    for (var friendDoc in friends) {
+      final friend = await FirebaseFirestore.instance.doc(friendDoc).get();
+      if (friend.data()!["profileTripStatusVisibility"] == "everyone" &&
+          friend.data()!['currentVisit'] != null) {
+        friendsVisiting.add(friend);
+      }
+    }
+    return friendsVisiting
         .where((element) => (element["name"] as String).toLowerCase().contains(
               searchText.toLowerCase(),
-            ));
-    return query.toList();
+            ))
+        .toList();
   }
 
   static Future<List<QueryDocumentSnapshot<Map<String, dynamic>>>>

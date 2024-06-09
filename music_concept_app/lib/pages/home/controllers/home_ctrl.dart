@@ -106,7 +106,7 @@ class SearchCtrl extends GetxController {
   void setSelectedCategory(String? value) => _selectedCategory.value = value;
   void setMapSearching(bool value) => _isMapSearching.value = value;
 
-  Future<List<QueryDocumentSnapshot<Map<String, dynamic>>>>? _future;
+  Future<List<DocumentSnapshot<Map<String, dynamic>>>>? _future;
 
   @override
   void onReady() {
@@ -132,6 +132,7 @@ class SearchCtrl extends GetxController {
 
     if (value == 'Amigos Compartiendo') {
       _future = UserAccountService.searchAccountsVisiting(
+        FirebaseAuth.instance.currentUser!.uid,
         searchText,
       );
       var result = await _future!;
