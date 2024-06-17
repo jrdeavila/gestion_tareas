@@ -160,7 +160,7 @@ class _ProfileViewState extends State<ProfileView> {
                                 "everyone" ||
                             widget.guest
                                     ?.data()?['profileTripStatusVisibility'] ==
-                                "friends")
+                                null)
                           ProfileTabBarItem(
                               label: 'Visitas',
                               icon: MdiIcons.sitemap,

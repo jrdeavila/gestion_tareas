@@ -68,8 +68,12 @@ abstract class UserAccountService {
     final friendsVisiting = <DocumentSnapshot<Map<String, dynamic>>>[];
     for (var friendDoc in friends) {
       final friend = await FirebaseFirestore.instance.doc(friendDoc).get();
-      if (friend.data()!["profileTripStatusVisibility"] == "everyone" &&
-          friend.data()!['currentVisit'] != null) {
+      var profileTripStatusVisibility =
+          friend.data()!["profileTripStatusVisibility"];
+      var isVisible = profileTripStatusVisibility == "everyone" ||
+          profileTripStatusVisibility == null;
+
+      if (isVisible && friend.data()!['currentVisit'] != null) {
         friendsVisiting.add(friend);
       }
     }

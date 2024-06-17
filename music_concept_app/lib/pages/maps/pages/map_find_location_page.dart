@@ -217,6 +217,7 @@ class _MapFindLocationPageState extends State<MapFindLocationPage> {
                   lng: latLng.longitude,
                 );
 
+                _selectedPoint = latLng;
                 _point = latLng;
 
                 setState(() {});

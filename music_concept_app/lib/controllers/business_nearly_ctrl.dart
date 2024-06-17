@@ -48,8 +48,10 @@ class BusinessNearlyCtrl extends GetxController {
       _isBusiness.value = value?.data()?["type"] == 0;
     });
     ever(businesses, _onStayInBusiness, condition: () => !_isBusiness.value);
-    ever(_onYouStay, _registerYouStayOnaBsns,
-        condition: () => !_isBusiness.value && _isAuthenticated.value);
+    ever(
+      _onYouStay,
+      _registerYouStayOnaBsns,
+    );
     ever(businesses, _notifyNearlyBusiness,
         condition: () => !_isBusiness.value && _isAuthenticated.value);
 
@@ -103,15 +105,17 @@ class BusinessNearlyCtrl extends GetxController {
 
   // Primera revision si esta en la zona, segunda revision registra el establecimiento visitado
   void _registerYouStayOnaBsns(FdSnapshot? snapshot) {
-    BusinessService.setCurrentVisit(
-      accountRef: "users/${_authApp.currentUser!.uid}",
-      businessRef: snapshot?.reference.path,
-    );
-    if (snapshot != null) {
-      BusinessService.createBusinessVisit(
+    if (!_isBusiness.value && _isAuthenticated.value) {
+      BusinessService.setCurrentVisit(
         accountRef: "users/${_authApp.currentUser!.uid}",
-        businessRef: snapshot.reference.path,
+        businessRef: snapshot?.reference.path,
       );
+      if (snapshot != null) {
+        BusinessService.createBusinessVisit(
+          accountRef: "users/${_authApp.currentUser!.uid}",
+          businessRef: snapshot.reference.path,
+        );
+      }
     }
   }
 
