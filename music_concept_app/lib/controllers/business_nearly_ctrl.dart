@@ -23,7 +23,7 @@ class BusinessNearlyCtrl extends GetxController {
   Timer? timer;
 
   final double userRadius = 50.0;
-  final double businessLimit = 20.0;
+  final double businessLimit = 8.0;
   final Duration _timerDuration = 10.minutes;
 
   @override

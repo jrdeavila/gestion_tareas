@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:music_concept_app/lib.dart';
@@ -38,25 +39,31 @@ class RegisterBussinessCtrl extends GetxController {
   void setLocation(LatLng? value) => _location.value = value;
 
   void submit() {
-    Get.find<AuthenticationCtrl>().register(
-      email: _email.validateEmail(),
-      password: _password.validateEmpty(
-        label: "Contraseña",
-      ),
-      name: _name.validateEmpty(
-        label: "Nombre",
-      ),
-      address: _address.validateEmpty(
-        label: "Direccion",
-      ),
-      category: _category.validateEmpty(
-        label: "Categoria",
-      ),
-      location: _location.validateNull(
-        label: "Ubicacion",
-      ),
-      image: _image.value,
-      type: UserAccountType.business,
-    );
+    try {
+      Get.find<AuthenticationCtrl>().register(
+        email: _email.validateEmail(),
+        password: _password.validateEmpty(
+          label: "Contraseña",
+        ),
+        name: _name.validateEmpty(
+          label: "Nombre",
+        ),
+        address: _address.validateEmpty(
+            label: "Dirección",
+            message: "Por favor, ingrese una dirección valida"),
+        category: _category.validateEmpty(
+          label: "Categoría",
+          message: "Por favor, seleccione una categoría",
+        ),
+        location: _location.validateNull(
+          label: "Ubicación",
+          message: "Por favor, seleccione una ubicación",
+        ),
+        image: _image.value,
+        type: UserAccountType.business,
+      );
+    } on MessageException catch (e) {
+      Get.snackbar("Error", e.message, backgroundColor: Colors.red);
+    }
   }
 }
