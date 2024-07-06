@@ -9,7 +9,7 @@ extension RxStringValidations on RxString {
 
   String validateEmpty({
     String label = "Campo",
-    String message = "Este campo no puede estar vacio",
+    String message = "Este campo no puede estar vació",
   }) {
     return validateException(isNotEmpty, "$label: $message").trim();
   }
