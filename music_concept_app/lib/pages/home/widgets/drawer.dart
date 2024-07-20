@@ -43,6 +43,13 @@ class HomeDrawer extends StatelessWidget {
                     ),
                   ),
                 ),
+                Container(
+                  color: const Color.fromRGBO(13, 92, 171, 1),
+                  child: Center(
+                    child: Image.asset("assets/img/publicidad-aguardiente.png",
+                        height: 150),
+                  ),
+                ),
                 const SizedBox(
                   height: 20.0,
                 ),

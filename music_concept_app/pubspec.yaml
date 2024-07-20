@@ -2,7 +2,7 @@ name: music_concept_app
 description: A new Flutter project.
 publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
-version: 1.0.0-beta+10
+version: 1.0.0-beta+11
 
 environment:
   sdk: ">=3.0.6 <4.0.0"
@@ -50,6 +50,7 @@ flutter:
     - assets/welcome/
     - assets/wallpapers/
     - assets/notification/
+    - assets/img/
     - assets/logo/
 
   uses-material-design: true

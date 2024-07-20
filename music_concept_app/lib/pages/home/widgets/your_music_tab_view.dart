@@ -24,7 +24,6 @@ class YourMusicTabView extends StatelessWidget {
             ),
             textAlign: TextAlign.center,
           ),
-          const SizedBox(height: 20.0),
           Expanded(
             child: FutureBuilder(
                 future:
@@ -45,16 +44,24 @@ class YourMusicTabView extends StatelessWidget {
                       child: Text("No hay canciones recientes"),
                     );
                   }
-                  return ListView.builder(
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemBuilder: (context, index) {
-                      var item = snapshot.data![index];
-                      return TrackItem(
-                        item: item,
-                      );
-                    },
-                    itemCount: snapshot.data?.length ?? 0,
+                  return Column(
+                    children: [
+                      for (var item in snapshot.data ?? [])
+                        TrackItem(
+                          item: item,
+                        ),
+                    ],
                   );
+                  // return ListView.builder(
+                  //   physics: const NeverScrollableScrollPhysics(),
+                  //   itemBuilder: (context, index) {
+                  //     var item = snapshot.data![index];
+                  //     return TrackItem(
+                  //       item: item,
+                  //     );
+                  //   },
+                  //   itemCount: snapshot.data?.length ?? 0,
+                  // );
                 }),
           ),
         ],
@@ -119,7 +126,19 @@ class TrackItem extends StatelessWidget {
             onTap: () {
               launchUrl(Uri.parse(item.trackURL));
             },
-            icon: MdiIcons.chevronDoubleRight,
+            child: const Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(MdiIcons.spotify),
+                Text(
+                  "Spotify",
+                  style: TextStyle(
+                    fontSize: 8.0,
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       ),

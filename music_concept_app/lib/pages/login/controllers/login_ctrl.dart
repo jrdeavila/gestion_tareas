@@ -7,8 +7,8 @@ class LoginCtrl extends GetxController {
   final RxString _email = RxString("");
   final RxString _password = RxString("");
 
-  void setEmail(String value) => _email.value = value;
-  void setPassword(String value) => _password.value = value;
+  void setEmail(String value) => _email.value = value.trim();
+  void setPassword(String value) => _password.value = value.trim();
 
   void submit() {
     Get.find<AuthenticationCtrl>().login(

@@ -29,28 +29,40 @@ class FanPageView extends StatelessWidget {
 
   AppBar _buildAppBar() {
     return AppBar(
-      title: Row(
+      title: Column(
         children: [
-          Container(
-            width: 40.0,
-            height: 40.0,
-            decoration: const BoxDecoration(
-              shape: BoxShape.circle,
-              image: DecorationImage(
-                image: AssetImage("assets/logo/logo.png"),
-                fit: BoxFit.cover,
+          Row(
+            children: [
+              Container(
+                width: 50.0,
+                height: 50.0,
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                  image: DecorationImage(
+                    image: AssetImage("assets/logo/logo.png"),
+                    fit: BoxFit.cover,
+                  ),
+                ),
               ),
-            ),
+              const Text(
+                AppDefaults.titleName,
+              ),
+            ],
           ),
-          const SizedBox(width: 5.0),
-          const Text(
-            AppDefaults.titleName,
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 20.0,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
+          Row(
+            children: [
+              const SizedBox(width: 10.0),
+              Image.asset(
+                "assets/logo/logo-aguardiente-rojo.png",
+                height: 40,
+              ),
+              const SizedBox(width: 10.0),
+              Image.asset(
+                "assets/img/pa-las-que-sea-rojo.png",
+                height: 50,
+              ),
+            ],
+          )
         ],
       ),
       actions: [

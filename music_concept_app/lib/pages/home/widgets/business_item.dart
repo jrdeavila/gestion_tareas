@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:music_concept_app/lib.dart';
@@ -20,12 +22,19 @@ class BusinessItem extends StatelessWidget {
     return StreamBuilder(
         stream: Get.find<ProfileCtrl>().getAccountStream(ref),
         builder: (context, snapshot) {
-          if (snapshot.data == null) return const BusinessItemSkeleton();
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const BusinessItemSkeleton();
+          }
+          if (snapshot.data?.data() == null) return const SizedBox();
 
           return GestureDetector(
             onTap: () {
-              if (snapshot.hasData) {
-                Get.toNamed(AppRoutes.guestProfile, arguments: snapshot.data);
+              if (snapshot.data != null) {
+                Get.toNamed(
+                  AppRoutes.guestProfile,
+                  arguments: snapshot.data,
+                  preventDuplicates: false,
+                );
               }
             },
             child: Container(
@@ -48,10 +57,13 @@ class BusinessItem extends StatelessWidget {
                   const SizedBox(
                     height: 10.0,
                   ),
-                  Text(snapshot.data!['name'],
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                      )),
+                  Text(
+                    snapshot.data!['name'],
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
                   const SizedBox(
                     height: 5.0,
                   ),

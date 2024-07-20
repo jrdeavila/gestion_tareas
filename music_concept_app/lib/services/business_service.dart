@@ -114,6 +114,7 @@ abstract class BusinessService {
         .snapshots()
         .map(
           (event) => event.docs
+              .where((element) => element.exists)
               .where((element) => element.data()['accountRef'] == accountRef)
               .toList(),
         );

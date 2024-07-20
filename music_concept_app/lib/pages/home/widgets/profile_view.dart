@@ -29,6 +29,7 @@ class _ProfileViewState extends State<ProfileView> {
   @override
   Widget build(BuildContext context) {
     final postCtrl = Get.find<PostCtrl>();
+    Get.find<SpotifyCtrl>().loadTracksToAccount(widget.guest?.reference.id);
 
     return Stack(
       fit: StackFit.expand,
@@ -79,35 +80,45 @@ class _ProfileViewState extends State<ProfileView> {
                       },
                     ),
                     actions: [
-                      Obx(() {
-                        return spotifyCtrl.hasUserInfo
-                            ? Center(
-                                child: GestureDetector(
-                                  onTap: () {
-                                    spotifyCtrl.logout();
-                                  },
-                                  child: Container(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 10.0, vertical: 10.0),
-                                    decoration: BoxDecoration(
-                                      color: Get.theme.colorScheme.primary,
-                                      borderRadius: BorderRadius.circular(20.0),
-                                    ),
-                                    child: const Icon(
-                                      MdiIcons.spotify,
-                                    ),
-                                  ),
+                      if (widget.guest == null)
+                        Obx(() {
+                          return Center(
+                            child: GestureDetector(
+                              onTap: () {
+                                if (!spotifyCtrl.hasUserInfo) {
+                                  spotifyCtrl.login();
+                                } else {
+                                  spotifyCtrl.logout();
+                                }
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 10.0, vertical: 10.0),
+                                decoration: BoxDecoration(
+                                  color: spotifyCtrl.hasUserInfo
+                                      ? Colors.green
+                                      : Get.theme.colorScheme.primary,
+                                  borderRadius: BorderRadius.circular(20.0),
                                 ),
-                              )
-                            : HomeAppBarAction(
-                                selected: true,
-                                icon: MdiIcons.spotify,
-                                light: true,
-                                onTap: () {
-                                  Get.find<SpotifyCtrl>().login();
-                                },
-                              );
-                      }),
+                                child: Row(
+                                  children: [
+                                    const Icon(
+                                      MdiIcons.spotify,
+                                      color: Colors.white,
+                                    ),
+                                    const SizedBox(width: 5.0),
+                                    Text(
+                                      "Spotify",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        }),
                       const SizedBox(width: 10.0),
                       if (widget.guest == null)
                         HomeAppBarAction(
@@ -173,13 +184,34 @@ class _ProfileViewState extends State<ProfileView> {
                       ],
                     ),
                   ),
-                  if (_currentTab == 0)
-                    SliverFillRemaining(
-                      child: YourMusicTabView(
-                        accountRef:
-                            (widget.guest?.id ?? Get.find<UserCtrl>().user?.id),
+                  if (_currentTab == 0) ...[
+                    const SliverToBoxAdapter(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 20.0, vertical: 10.0),
+                        child: Text(
+                          "Tu música recientemente escuchada",
+                          style: TextStyle(
+                            fontSize: 20.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                       ),
                     ),
+                    ...Get.find<SpotifyCtrl>().tracks.map(
+                      (item) {
+                        return SliverToBoxAdapter(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 20.0, vertical: 5.0),
+                            child: TrackItem(
+                              item: item,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ],
                   if (_currentTab == 1 &&
                           snapshot.connectionState == ConnectionState.waiting ||
                       snapshot.connectionState == ConnectionState.none)
@@ -364,6 +396,13 @@ class _ProfileViewState extends State<ProfileView> {
                                 .getFollowingInCurrentVisit(
                                     accountRef: widget.guest?.id),
                             builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return const SizedBox.shrink();
+                              }
+                              if (snapshot.data == null) {
+                                return const SizedBox.shrink();
+                              }
                               var length = snapshot.data?.length ?? 0;
                               var limit = 4;
                               var items = length >= limit ? limit : length;
@@ -411,6 +450,13 @@ class _ProfileViewState extends State<ProfileView> {
                                           .getAccountStream(
                                               data!['currentVisit']),
                                       builder: (context, business) {
+                                        if (business.connectionState ==
+                                            ConnectionState.waiting) {
+                                          return const SizedBox.shrink();
+                                        }
+                                        if (business.data == null) {
+                                          return const SizedBox.shrink();
+                                        }
                                         return Column(
                                           mainAxisSize: MainAxisSize.min,
                                           children: [

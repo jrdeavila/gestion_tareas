@@ -10,6 +10,7 @@ class SpotifyCtrl extends GetxController {
   final RxBool _isLogged = false.obs;
   final Rx<String?> _token = Rx(null);
   final Rx<SpotifyUserInfo?> _userInfo = Rx(null);
+  final RxList<SpotifyTrack> _tracks = <SpotifyTrack>[].obs;
 
   SpotifyCtrl(this._app);
 
@@ -18,6 +19,7 @@ class SpotifyCtrl extends GetxController {
   bool get hasUserImage =>
       _userInfo.value != null && _userInfo.value?.imageUrl != null;
   bool get hasUserInfo => _userInfo.value != null;
+  List<SpotifyTrack> get tracks => _tracks;
 
   @override
   void onReady() {
@@ -109,6 +111,14 @@ class SpotifyCtrl extends GetxController {
     await ref.update({
       "spotify_token": null,
       "spotify_refresh_token": null,
+    });
+  }
+
+  void loadTracksToAccount(String? path) {
+    final user = FirebaseAuth.instanceFor(app: _app).currentUser;
+    final ref = UserAccountService.getUserAccountRef(path ?? user?.uid);
+    SpotifyService.getUserTracks(ref.path).then((value) {
+      _tracks.assignAll(value);
     });
   }
 }
