@@ -63,21 +63,20 @@ abstract class UserAccountService {
 
   static Future<List<DocumentSnapshot<Map<String, dynamic>>>>
       searchAccountsVisiting(String accountRef, String searchText) async {
-    final friends = await FollowingFollowersServices.getFriendsFuture(
-        accountRef: "users/$accountRef");
-    final friendsVisiting = <DocumentSnapshot<Map<String, dynamic>>>[];
-    for (var friendDoc in friends) {
-      final friend = await FirebaseFirestore.instance.doc(friendDoc).get();
+    final people = await UserAccountService.searchAccounts(searchText);
+
+    final peopleVisiting = <DocumentSnapshot<Map<String, dynamic>>>[];
+    for (var personDoc in people) {
       var profileTripStatusVisibility =
-          friend.data()!["profileTripStatusVisibility"];
+          personDoc.data()["profileTripStatusVisibility"];
       var isVisible = profileTripStatusVisibility == "everyone" ||
           profileTripStatusVisibility == null;
 
-      if (isVisible && friend.data()!['currentVisit'] != null) {
-        friendsVisiting.add(friend);
+      if (isVisible && personDoc.data()['currentVisit'] != null) {
+        peopleVisiting.add(personDoc);
       }
     }
-    return friendsVisiting
+    return peopleVisiting
         .where((element) => (element["name"] as String).toLowerCase().contains(
               searchText.toLowerCase(),
             ))

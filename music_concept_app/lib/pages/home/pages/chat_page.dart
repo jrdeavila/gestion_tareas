@@ -41,7 +41,7 @@ class _ChatPageState extends State<ChatPage> {
               builder: (context, conversation) {
                 var hasData = conversation.hasData;
                 if (hasData) {
-                  return _buildReciverInfo(conversation);
+                  return _buildReceiverDetails(conversation);
                 }
                 return const Padding(
                   padding: EdgeInsets.only(top: kToolbarHeight + 16.0),
@@ -58,46 +58,134 @@ class _ChatPageState extends State<ChatPage> {
           Expanded(
             child: _buildChatList(),
           ),
-          const Divider(),
-          Container(
-            padding: const EdgeInsets.all(16.0),
-            child: Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: textCtrl,
-                    decoration: InputDecoration(
-                      contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 20.0,
-                        vertical: 0.0,
-                      ),
-                      filled: true,
-                      fillColor: Get.theme.colorScheme.onBackground,
-                      hintText: "Escribe un mensaje",
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(20.0),
-                          borderSide: BorderSide.none),
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  width: 10.0,
-                ),
-                HomeAppBarAction(
-                  selected: true,
-                  light: true,
-                  onTap: () {
-                    Get.find<ChatCtrl>().sendMessage(
-                      conversationRef: widget.conversationRef,
-                      message: textCtrl.text,
-                    );
-                    textCtrl.text = "";
-                  },
-                  icon: Icons.send,
-                ),
-              ],
-            ),
-          ),
+          StreamBuilder(
+              stream: Get.find<ChatCtrl>()
+                  .getConversationStream(widget.conversationRef),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return const SizedBox.shrink();
+                }
+
+                String? creatorRef = snapshot.data?.data()?['creatorRef'];
+
+                var firstAttemptData =
+                    snapshot.data?.data()?['firstAttempt'] ?? true;
+                var userRef = Get.find<ChatCtrl>().userRef;
+                var firstAttempt = firstAttemptData && creatorRef == null
+                    ? true
+                    : userRef != creatorRef;
+                return Column(
+                  children: [
+                    ...(firstAttempt
+                        ? [
+                            const SizedBox(
+                              height: 20.0,
+                            ),
+                            Container(
+                                decoration: BoxDecoration(
+                                  color: Get.theme.colorScheme.primary,
+                                  borderRadius: BorderRadius.circular(20.0),
+                                ),
+                                child: Padding(
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          const Text(
+                                            "¿Desea interactuar con esta persona?",
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          const SizedBox(
+                                            height: 10.0,
+                                          ),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              HomeAppBarAction(
+                                                icon: Icons.check,
+                                                onTap: () {
+                                                  Get.find<ChatCtrl>()
+                                                      .updateFirstAttempt(
+                                                    conversationRef:
+                                                        widget.conversationRef,
+                                                    value: false,
+                                                  );
+                                                },
+                                              ),
+                                              const SizedBox(
+                                                width: 10.0,
+                                              ),
+                                              HomeAppBarAction(
+                                                icon: Icons.close,
+                                                onTap: () {
+                                                  Get.back();
+                                                  Get.find<ChatCtrl>()
+                                                      .deleteConversation(
+                                                    conversationRef:
+                                                        widget.conversationRef,
+                                                  );
+                                                },
+                                              ),
+                                            ],
+                                          ),
+                                        ]))),
+                            const SizedBox(
+                              height: 20.0,
+                            ),
+                          ]
+                        : [
+                            const Divider(),
+                            Container(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: TextField(
+                                      controller: textCtrl,
+                                      decoration: InputDecoration(
+                                        contentPadding:
+                                            const EdgeInsets.symmetric(
+                                          horizontal: 20.0,
+                                          vertical: 0.0,
+                                        ),
+                                        filled: true,
+                                        fillColor:
+                                            Get.theme.colorScheme.onBackground,
+                                        hintText: "Escribe un mensaje",
+                                        border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(20.0),
+                                            borderSide: BorderSide.none),
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    width: 10.0,
+                                  ),
+                                  HomeAppBarAction(
+                                    selected: true,
+                                    light: true,
+                                    onTap: () {
+                                      Get.find<ChatCtrl>().sendMessage(
+                                        conversationRef: widget.conversationRef,
+                                        message: textCtrl.text,
+                                      );
+                                      textCtrl.text = "";
+                                    },
+                                    icon: Icons.send,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ])
+                  ],
+                );
+              })
         ],
       ),
     );
@@ -152,13 +240,16 @@ class _ChatPageState extends State<ChatPage> {
         });
   }
 
-  StreamBuilder<FdSnapshot> _buildReciverInfo(
+  StreamBuilder<FdSnapshot> _buildReceiverDetails(
       AsyncSnapshot<FdSnapshot> conversation) {
     return StreamBuilder(
         stream: Get.find<ChatCtrl>().getReceiverStream(
           conversation.data?.data()?['participants']?.cast<String>(),
         ),
         builder: (context, snapshot) {
+          if (snapshot.data == null) {
+            return const SizedBox.shrink();
+          }
           return GestureDetector(
             onTap: () {
               if (snapshot.hasData) {
@@ -170,6 +261,15 @@ class _ChatPageState extends State<ChatPage> {
                   const EdgeInsets.only(left: 16.0, top: kToolbarHeight + 16.0),
               child: Row(
                 children: [
+                  HomeAppBarAction(
+                    icon: Icons.arrow_back,
+                    onTap: () {
+                      Get.back();
+                    },
+                  ),
+                  const SizedBox(
+                    width: 10.0,
+                  ),
                   ProfileImage(
                     avatarSize: 50.0,
                     image: snapshot.data?.data()?['image'],
@@ -205,6 +305,19 @@ class _ChatPageState extends State<ChatPage> {
                       ),
                     ],
                   ),
+                  const Spacer(),
+                  HomeAppBarAction(
+                    icon: Icons.delete,
+                    onTap: () {
+                      Get.back();
+                      Get.find<ChatCtrl>().deleteConversation(
+                        conversationRef: widget.conversationRef,
+                      );
+                    },
+                  ),
+                  const SizedBox(
+                    width: 16.0,
+                  ),
                 ],
               ),
             ),
@@ -224,52 +337,76 @@ class ChatItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var iAmSender = Get.find<ChatCtrl>().isSender(chatItem);
+    var receiverSeen = chatItem.data()?['receiverSeen'] ?? false;
+    var receiverSeenTimestamp =
+        chatItem.data()?['receiverSeenTimestamp'] as Timestamp?;
+    var lastSeenTime = receiverSeenTimestamp?.toDate() ?? DateTime.now();
+    var lastSeenTimeString = DateFormat('HH:mm a').format(lastSeenTime);
+    if (!receiverSeen && !iAmSender) {
+      Get.find<ChatCtrl>().updateLastSeen(chatItem);
+    }
     var backgroundColor = iAmSender
         ? Get.theme.colorScheme.primary
         : Get.theme.colorScheme.onBackground;
     var textColor = Get.theme.colorScheme.onPrimary;
-    return Row(
-      mainAxisAlignment:
-          iAmSender ? MainAxisAlignment.end : MainAxisAlignment.start,
+    return Column(
       children: [
-        Container(
-          padding: const EdgeInsets.symmetric(
-            vertical: 10.0,
-            horizontal: 15.0,
-          ),
-          margin: const EdgeInsets.symmetric(vertical: 10.0),
-          constraints: const BoxConstraints(maxWidth: 300.0),
-          decoration: BoxDecoration(
-            color: backgroundColor,
-            borderRadius: BorderRadius.circular(20.0),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                chatItem.data()?['message'] ?? "**********",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 15.0,
-                  color: textColor,
-                ),
+        Row(
+          mainAxisAlignment:
+              iAmSender ? MainAxisAlignment.end : MainAxisAlignment.start,
+          children: [
+            Container(
+              padding: const EdgeInsets.symmetric(
+                vertical: 10.0,
+                horizontal: 15.0,
               ),
-              const SizedBox(
-                height: 5.0,
+              margin: const EdgeInsets.symmetric(vertical: 10.0),
+              constraints: const BoxConstraints(maxWidth: 300.0),
+              decoration: BoxDecoration(
+                color: backgroundColor,
+                borderRadius: BorderRadius.circular(20.0),
               ),
-              Text(
-                DateFormat('HH:mm a').format(
-                  (chatItem.data()?['timestamp'] as Timestamp?)?.toDate() ??
-                      DateTime.now(),
-                ),
-                style: TextStyle(
-                  fontSize: 10.0,
-                  color: textColor,
-                ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    chatItem.data()?['message'] ?? "**********",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15.0,
+                      color: textColor,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 5.0,
+                  ),
+                  Text(
+                    DateFormat('HH:mm a').format(
+                      (chatItem.data()?['timestamp'] as Timestamp?)?.toDate() ??
+                          DateTime.now(),
+                    ),
+                    style: TextStyle(
+                      fontSize: 10.0,
+                      color: textColor,
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 15.0),
+          width: double.infinity,
+          child: Text(
+            receiverSeen ? "Visto $lastSeenTimeString" : "Enviado",
+            style: TextStyle(
+              fontSize: 10.0,
+              color: Colors.grey[500],
+            ),
+            textAlign: iAmSender ? TextAlign.end : TextAlign.start,
+          ),
+        )
       ],
     );
   }

@@ -100,13 +100,13 @@ class _ProfileViewState extends State<ProfileView> {
                                       : Get.theme.colorScheme.primary,
                                   borderRadius: BorderRadius.circular(20.0),
                                 ),
-                                child: Row(
+                                child: const Row(
                                   children: [
-                                    const Icon(
+                                    Icon(
                                       MdiIcons.spotify,
                                       color: Colors.white,
                                     ),
-                                    const SizedBox(width: 5.0),
+                                    SizedBox(width: 5.0),
                                     Text(
                                       "Spotify",
                                       style: TextStyle(
@@ -119,6 +119,19 @@ class _ProfileViewState extends State<ProfileView> {
                             ),
                           );
                         }),
+
+                      // ...[
+                      //   HomeAppBarAction(
+                      //     selected: true,
+                      //     icon: MdiIcons.message,
+                      //     onTap: () {
+                      //       if (widget.guest == null) return;
+                      //       Get.find<ChatCtrl>().openNewChat(
+                      //         receiverRef: widget.guest!.reference.path,
+                      //       );
+                      //     },
+                      //   ),
+                      // ],
                       const SizedBox(width: 10.0),
                       if (widget.guest == null)
                         HomeAppBarAction(

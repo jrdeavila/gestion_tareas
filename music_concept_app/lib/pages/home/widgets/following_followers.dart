@@ -77,22 +77,14 @@ class AccountFollowFollowers extends StatelessWidget {
                         const SizedBox(width: 10.0),
                       ],
                       if (guest != null)
-                        StreamBuilder<bool>(
-                            stream: ctrl.isAFriend(
-                                accountRef: guest!.reference.path),
-                            builder: (context, snapshot) {
-                              if (snapshot.data == true) {
-                                return HomeAppBarAction(
-                                  icon: MdiIcons.message,
-                                  selected: true,
-                                  onTap: () {
-                                    Get.find<ChatCtrl>().openNewChat(
-                                        receiverRef: guest!.reference.path);
-                                  },
-                                );
-                              }
-                              return const SizedBox.shrink();
-                            }),
+                        HomeAppBarAction(
+                          icon: MdiIcons.message,
+                          selected: true,
+                          onTap: () {
+                            Get.find<ChatCtrl>().openNewChat(
+                                receiverRef: guest!.reference.path);
+                          },
+                        ),
                       if (snapshot.data == true)
                         PopupMenuProfile(
                           options: options,

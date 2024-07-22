@@ -1,4 +1,5 @@
 import 'package:audioplayers/audioplayers.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:get/get.dart';
@@ -10,6 +11,8 @@ class ChatCtrl extends GetxController {
   ChatCtrl(this._app);
 
   FirebaseAuth get _authApp => FirebaseAuth.instanceFor(app: _app);
+
+  String get userRef => "users/${_authApp.currentUser!.uid}";
 
   int get chatsNotRead => chats.where((element) {
         return element.data()?['lastSenderRef'] !=
@@ -96,5 +99,22 @@ class ChatCtrl extends GetxController {
       senderRef: "users/${_authApp.currentUser!.uid}",
       message: message,
     );
+  }
+
+  void updateLastSeen(DocumentSnapshot<Map<String, dynamic>> chatItem) {
+    if (chatItem.data()?['lastSenderRef'] !=
+        "users/${_authApp.currentUser!.uid}") {
+      ChatService.viewConversation(conversationRef: chatItem.reference.path);
+    }
+  }
+
+  void updateFirstAttempt(
+      {required String conversationRef, required bool value}) {
+    ChatService.updateFirstAttempt(
+        conversationRef: conversationRef, value: value);
+  }
+
+  void deleteConversation({required String conversationRef}) {
+    ChatService.deleteConversation(conversationRef: conversationRef);
   }
 }

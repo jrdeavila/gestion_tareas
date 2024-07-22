@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:music_concept_app/lib.dart';
 
 abstract class ChatService {
@@ -6,6 +7,9 @@ abstract class ChatService {
     required String senderRef,
     required String receiverRef,
   }) async {
+    if (kDebugMode) {
+      print("Create a conversation between $senderRef and $receiverRef");
+    }
     var find = await FirebaseFirestore.instance
         .collection("conversations")
         .where("participants", whereIn: [
@@ -18,20 +22,58 @@ abstract class ChatService {
     var doc = await FirebaseFirestore.instance.collection("conversations").add({
       "participants": [senderRef, receiverRef],
       "lastMessage": null,
+      "firstAttempt": true,
+      "creatorRef": senderRef,
       "timestamp": FieldValue.serverTimestamp(),
     });
     return doc.path;
   }
 
+  static Future<void> updateFirstAttempt(
+      {required String conversationRef, required bool value}) async {
+    if (kDebugMode) {
+      print("Update first attempt in $conversationRef to $value");
+    }
+    return FirebaseFirestore.instance.doc(conversationRef).update({
+      "firstAttempt": value,
+    });
+  }
+
+  static Future<void> deleteConversation(
+      {required String conversationRef}) async {
+    if (kDebugMode) {
+      print("Delete conversation $conversationRef");
+    }
+    return FirebaseFirestore.instance.doc(conversationRef).delete();
+  }
+
   static Stream<FdSnapshot> getConversation(String conversationRef) {
+    if (kDebugMode) {
+      print("Get conversation $conversationRef");
+    }
     return FirebaseFirestore.instance.doc(conversationRef).snapshots();
   }
 
   static Future<void> receiverSeenMessage({
     required String conversationRef,
   }) async {
+    if (kDebugMode) {
+      print("Receiver seen message in $conversationRef");
+    }
     await FirebaseFirestore.instance.doc(conversationRef).update({
       "receiverSeen": true,
+    });
+  }
+
+  static Future<void> viewConversation({
+    required String conversationRef,
+  }) async {
+    if (kDebugMode) {
+      print("View conversation $conversationRef");
+    }
+    await FirebaseFirestore.instance.doc(conversationRef).update({
+      "receiverSeen": true,
+      "receiverSeenTimestamp": FieldValue.serverTimestamp(),
     });
   }
 
@@ -40,6 +82,9 @@ abstract class ChatService {
     required String conversationRef,
     required String message,
   }) async {
+    if (kDebugMode) {
+      print("Send message $message from $senderRef to $conversationRef");
+    }
     await FirebaseFirestore.instance
         .doc(conversationRef)
         .collection("messages")
