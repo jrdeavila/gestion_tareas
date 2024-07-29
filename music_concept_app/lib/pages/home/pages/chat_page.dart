@@ -31,7 +31,6 @@ class _ChatPageState extends State<ChatPage> {
 
   @override
   Widget build(BuildContext context) {
-    var textCtrl = TextEditingController();
     return Scaffold(
       body: Column(
         children: [
@@ -58,137 +57,135 @@ class _ChatPageState extends State<ChatPage> {
           Expanded(
             child: _buildChatList(),
           ),
-          StreamBuilder(
-              stream: Get.find<ChatCtrl>()
-                  .getConversationStream(widget.conversationRef),
-              builder: (context, snapshot) {
-                if (!snapshot.hasData) {
-                  return const SizedBox.shrink();
-                }
-
-                String? creatorRef = snapshot.data?.data()?['creatorRef'];
-
-                var firstAttemptData =
-                    snapshot.data?.data()?['firstAttempt'] ?? true;
-                var userRef = Get.find<ChatCtrl>().userRef;
-                var firstAttempt = firstAttemptData && creatorRef == null
-                    ? true
-                    : userRef != creatorRef;
-                return Column(
-                  children: [
-                    ...(firstAttempt
-                        ? [
-                            const SizedBox(
-                              height: 20.0,
-                            ),
-                            Container(
-                                decoration: BoxDecoration(
-                                  color: Get.theme.colorScheme.primary,
-                                  borderRadius: BorderRadius.circular(20.0),
-                                ),
-                                child: Padding(
-                                    padding: const EdgeInsets.all(10.0),
-                                    child: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          const Text(
-                                            "¿Desea interactuar con esta persona?",
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                          const SizedBox(
-                                            height: 10.0,
-                                          ),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              HomeAppBarAction(
-                                                icon: Icons.check,
-                                                onTap: () {
-                                                  Get.find<ChatCtrl>()
-                                                      .updateFirstAttempt(
-                                                    conversationRef:
-                                                        widget.conversationRef,
-                                                    value: false,
-                                                  );
-                                                },
-                                              ),
-                                              const SizedBox(
-                                                width: 10.0,
-                                              ),
-                                              HomeAppBarAction(
-                                                icon: Icons.close,
-                                                onTap: () {
-                                                  Get.back();
-                                                  Get.find<ChatCtrl>()
-                                                      .deleteConversation(
-                                                    conversationRef:
-                                                        widget.conversationRef,
-                                                  );
-                                                },
-                                              ),
-                                            ],
-                                          ),
-                                        ]))),
-                            const SizedBox(
-                              height: 20.0,
-                            ),
-                          ]
-                        : [
-                            const Divider(),
-                            Container(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    child: TextField(
-                                      controller: textCtrl,
-                                      decoration: InputDecoration(
-                                        contentPadding:
-                                            const EdgeInsets.symmetric(
-                                          horizontal: 20.0,
-                                          vertical: 0.0,
-                                        ),
-                                        filled: true,
-                                        fillColor:
-                                            Get.theme.colorScheme.onBackground,
-                                        hintText: "Escribe un mensaje",
-                                        border: OutlineInputBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(20.0),
-                                            borderSide: BorderSide.none),
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    width: 10.0,
-                                  ),
-                                  HomeAppBarAction(
-                                    selected: true,
-                                    light: true,
-                                    onTap: () {
-                                      Get.find<ChatCtrl>().sendMessage(
-                                        conversationRef: widget.conversationRef,
-                                        message: textCtrl.text,
-                                      );
-                                      textCtrl.text = "";
-                                    },
-                                    icon: Icons.send,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ])
-                  ],
-                );
-              })
+          _buildFirstAttempt()
         ],
       ),
     );
+  }
+
+  StreamBuilder<FdSnapshot> _buildFirstAttempt() {
+    var textCtrl = TextEditingController();
+    return StreamBuilder(
+        stream:
+            Get.find<ChatCtrl>().getConversationStream(widget.conversationRef),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return const SizedBox.shrink();
+          }
+
+          String? creatorRef = snapshot.data?.data()?['creatorRef'];
+
+          var firstAttemptData = snapshot.data?.data()?['firstAttempt'] ?? true;
+          var userRef = Get.find<ChatCtrl>().userRef;
+          var firstAttempt = firstAttemptData && userRef != creatorRef;
+          return Column(
+            children: [
+              ...(firstAttempt
+                  ? [
+                      const SizedBox(
+                        height: 20.0,
+                      ),
+                      Container(
+                          decoration: BoxDecoration(
+                            color: Get.theme.colorScheme.primary,
+                            borderRadius: BorderRadius.circular(20.0),
+                          ),
+                          child: Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    const Text(
+                                      "¿Desea interactuar con esta persona?",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 10.0,
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        HomeAppBarAction(
+                                          icon: Icons.check,
+                                          onTap: () {
+                                            Get.find<ChatCtrl>()
+                                                .updateFirstAttempt(
+                                              conversationRef:
+                                                  widget.conversationRef,
+                                            );
+                                          },
+                                        ),
+                                        const SizedBox(
+                                          width: 10.0,
+                                        ),
+                                        HomeAppBarAction(
+                                          icon: Icons.close,
+                                          onTap: () {
+                                            Get.back();
+                                            Get.find<ChatCtrl>()
+                                                .deleteConversation(
+                                              conversationRef:
+                                                  widget.conversationRef,
+                                            );
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                  ]))),
+                      const SizedBox(
+                        height: 20.0,
+                      ),
+                    ]
+                  : [
+                      const Divider(),
+                      Container(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: TextField(
+                                controller: textCtrl,
+                                decoration: InputDecoration(
+                                  contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: 20.0,
+                                    vertical: 0.0,
+                                  ),
+                                  filled: true,
+                                  fillColor: Get.theme.colorScheme.onBackground,
+                                  hintText: "Escribe un mensaje",
+                                  border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(20.0),
+                                      borderSide: BorderSide.none),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(
+                              width: 10.0,
+                            ),
+                            HomeAppBarAction(
+                              selected: true,
+                              light: true,
+                              onTap: () {
+                                Get.find<ChatCtrl>().sendMessage(
+                                  conversationRef: widget.conversationRef,
+                                  message: textCtrl.text,
+                                );
+                                textCtrl.text = "";
+                              },
+                              icon: Icons.send,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ])
+            ],
+          );
+        });
   }
 
   StreamBuilder<List<FdSnapshot>> _buildChatList() {
@@ -280,30 +277,33 @@ class _ChatPageState extends State<ChatPage> {
                   const SizedBox(
                     width: 10.0,
                   ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        snapshot.data?.data()?['name'] ?? "",
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20.0,
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          snapshot.data?.data()?['name'] ?? "",
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20.0,
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ),
-                      ),
-                      const SizedBox(
-                        height: 5.0,
-                      ),
-                      Text(
-                        snapshot.data?.data()?['active'] ?? false
-                            ? "Activo ahora"
-                            : "Desconectado",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 15.0,
-                          color: Colors.grey[500],
+                        const SizedBox(
+                          height: 5.0,
                         ),
-                      ),
-                    ],
+                        Text(
+                          snapshot.data?.data()?['active'] ?? false
+                              ? "Activo ahora"
+                              : "Inactivo",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 15.0,
+                            color: Colors.grey[500],
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                   const Spacer(),
                   HomeAppBarAction(

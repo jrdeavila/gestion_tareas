@@ -34,7 +34,7 @@ abstract class ChatService {
     if (kDebugMode) {
       print("Update first attempt in $conversationRef to $value");
     }
-    return FirebaseFirestore.instance.doc(conversationRef).update({
+    return await FirebaseFirestore.instance.doc(conversationRef).update({
       "firstAttempt": value,
     });
   }

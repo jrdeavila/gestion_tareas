@@ -108,10 +108,9 @@ class ChatCtrl extends GetxController {
     }
   }
 
-  void updateFirstAttempt(
-      {required String conversationRef, required bool value}) {
+  void updateFirstAttempt({required String conversationRef}) {
     ChatService.updateFirstAttempt(
-        conversationRef: conversationRef, value: value);
+        conversationRef: conversationRef, value: false);
   }
 
   void deleteConversation({required String conversationRef}) {
