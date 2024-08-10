@@ -110,12 +110,12 @@ class AuthenticationCtrl extends GetxController {
 
   void deleteAccount() async {
     try {
+      final id = _firebaseUser.value!.uid;
+      await FirebaseAuth.instanceFor(app: _app).currentUser!.delete();
       await UserAccountService.deleteAccount(
-        _firebaseUser.value!.uid,
+        id,
         firebaseApp: _app,
       );
-      await FirebaseAuth.instanceFor(app: _app).currentUser!.delete();
-      // .then((value) => _validateOtherApps());
     } catch (e) {
       SnackbarUtils.showSnackbar(
         message: "Inicie sesión nuevamente para eliminar la cuenta",

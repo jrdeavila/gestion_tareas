@@ -21,9 +21,15 @@ class ReedView extends StatelessWidget {
               physics: const BouncingScrollPhysics(),
               slivers: [
                 const SliverToBoxAdapter(child: BusinessConnection()),
+                SliverToBoxAdapter(
+                  child: Image.asset(
+                    "assets/img/tada.jpg",
+                    height: 100.0,
+                  ),
+                ),
                 const SliverToBoxAdapter(
                   child: SizedBox(
-                    height: 250,
+                    height: 200,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [

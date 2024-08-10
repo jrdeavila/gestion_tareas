@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:music_concept_app/lib.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class HomeCtrl extends GetxController {
   final FirebaseApp app;
@@ -152,6 +153,11 @@ class SearchCtrl extends GetxController {
   void clearResults() {
     _searchText.value = "";
     searchResult.value = [];
+  }
+
+  void goToTada() {
+    const url = "https://onelink.tadadelivery.com.co/6iLg/3qh27rbe";
+    launch(url);
   }
 }
 

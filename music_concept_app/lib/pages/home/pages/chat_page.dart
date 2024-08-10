@@ -361,7 +361,8 @@ class ChatItem extends StatelessWidget {
                 horizontal: 15.0,
               ),
               margin: const EdgeInsets.symmetric(vertical: 10.0),
-              constraints: const BoxConstraints(maxWidth: 300.0),
+              constraints:
+                  const BoxConstraints(maxWidth: 300.0, minWidth: 150.0),
               decoration: BoxDecoration(
                 color: backgroundColor,
                 borderRadius: BorderRadius.circular(20.0),
@@ -373,7 +374,7 @@ class ChatItem extends StatelessWidget {
                     chatItem.data()?['message'] ?? "**********",
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: 15.0,
+                      fontSize: 20.0,
                       color: textColor,
                     ),
                   ),
@@ -386,7 +387,7 @@ class ChatItem extends StatelessWidget {
                           DateTime.now(),
                     ),
                     style: TextStyle(
-                      fontSize: 10.0,
+                      fontSize: 12.0,
                       color: textColor,
                     ),
                   ),
@@ -398,13 +399,28 @@ class ChatItem extends StatelessWidget {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 15.0),
           width: double.infinity,
-          child: Text(
-            receiverSeen ? "Visto $lastSeenTimeString" : "Enviado",
-            style: TextStyle(
-              fontSize: 10.0,
-              color: Colors.grey[500],
-            ),
-            textAlign: iAmSender ? TextAlign.end : TextAlign.start,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                receiverSeen ? "Visto $lastSeenTimeString" : "Enviado",
+                style: TextStyle(
+                  fontSize: 10.0,
+                  color: Colors.grey[500],
+                ),
+                textAlign: iAmSender ? TextAlign.end : TextAlign.start,
+              ),
+              const SizedBox(
+                width: 2,
+              ),
+              Icon(
+                receiverSeen ? Icons.done_all : Icons.done,
+                size: 15.0,
+                color: Colors.grey[500],
+              )
+            ],
           ),
         )
       ],

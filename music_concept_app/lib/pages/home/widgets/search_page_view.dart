@@ -91,6 +91,12 @@ class SearchPageView extends StatelessWidget {
                   onTap: () => ctrl.setMapSearching(false),
                 ),
                 ProfileTabBarItem(
+                  label: 'TADA',
+                  icon: MdiIcons.hatFedora,
+                  selected: !ctrl.isMapSearching,
+                  onTap: () => ctrl.goToTada(),
+                ),
+                ProfileTabBarItem(
                   label: 'Descubrir',
                   icon: MdiIcons.mapMarkerRadius,
                   selected: ctrl.isMapSearching,

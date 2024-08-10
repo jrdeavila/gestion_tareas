@@ -115,5 +115,6 @@ class ChatCtrl extends GetxController {
 
   void deleteConversation({required String conversationRef}) {
     ChatService.deleteConversation(conversationRef: conversationRef);
+    Get.back();
   }
 }
