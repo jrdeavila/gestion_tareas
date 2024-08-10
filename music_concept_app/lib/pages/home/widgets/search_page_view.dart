@@ -90,11 +90,23 @@ class SearchPageView extends StatelessWidget {
                   selected: !ctrl.isMapSearching,
                   onTap: () => ctrl.setMapSearching(false),
                 ),
-                ProfileTabBarItem(
-                  label: 'TADA',
-                  icon: MdiIcons.hatFedora,
-                  selected: !ctrl.isMapSearching,
-                  onTap: () => ctrl.goToTada(),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                  child: GestureDetector(
+                    onTap: () {
+                      Get.find<SearchCtrl>().goToTada();
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(20.0),
+                        image: const DecorationImage(
+                          image: AssetImage('assets/img/tada.png'),
+                        ),
+                      ),
+                      height: 40.0,
+                    ),
+                  ),
                 ),
                 ProfileTabBarItem(
                   label: 'Descubrir',
